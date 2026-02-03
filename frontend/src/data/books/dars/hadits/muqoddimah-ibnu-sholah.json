@@ -1,0 +1,35 @@
+{
+  "id": "muqoddimah-ibnu-sholah",
+  "title": "Muqoddimah Ibnu Sholah",
+  "titleArabic": "مقدمة ابن الصلاح",
+  "author": "Al-imam Ibnu Sholah",
+  "type": "dars",
+  "level": "advanced",
+  "field": "hadits",
+  "description": "kitab yang menjadi fondasi utama pembahasan kaidah-kaidah hadis di kalangan ulama. Kitab ini menghimpun dan menertibkan berbagai disiplin ilmu hadis secara komprehensif, sehingga menjadi rujukan induk bagi banyak kitab setelahnya. Dianjurkan untuk dibarengi dengan kitab An-nukat milik Al-imam ibnu Hajar al asqollani",
+  "recommendedUsage": "talaqqi",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    {
+      "publisher": "Darul minhaj",
+      "note": "Tahqiq dari seorang azhari Ahli hadist syekh Nuruddin itr, harga mungkin lebih tinggi",
+      "label": "recommended"
+    },
+    {
+      "publisher": "Darul fikr",
+      "note": "Tahqiq dari seorang azhari Ahli hadist syekh Nuruddin itr. Harga mungkin lebih rendah",
+      "label": "alternative"
+    }
+  ]
+}

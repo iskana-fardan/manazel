@@ -1,0 +1,41 @@
+{
+    "id": "ulumul_quran",
+    "field": "ulumul-quran",
+    "title": "Ulumul Quran",
+    "titleArabic": "علوم القرآن",
+    "description": "Roadmap pembelajaran ilmu Ulumul Quran dari dasar hingga lanjutan",
+    "icon": "ulumul_quran",
+    "levels": [
+        {
+        "id": "beginner",
+        "label": "Beginner",
+        "order": 1,
+        "dars": [
+            {
+            "id": "ajurrumiyyah",
+            "bookId": "ajurrumiyyah",
+            "affectsProgress": true
+            }
+        ]
+        },
+        {
+        "id": "intermediate",
+        "label": "Intermediate",
+        "order": 2,
+        "dars": []
+        },
+        {
+        "id": "advanced",
+        "label": "Advanced",
+        "order": 3,
+        "dars": []
+        }
+    ],
+    "muthalaah": [
+        {
+        "id": "al-khasais",
+        "bookId": "al-khasais",
+        "label": "Pengayaan"
+        }
+    ]
+    }

@@ -1,0 +1,27 @@
+{
+  
+  "id": "minhaj-at-talibin",
+  "title": "Minhaj At-Talibin",
+  "titleArabic": "منهاج الطالبين",
+  "author": "Al-Imam An-Nawawi",
+  "type": "dars",
+  "level": "advanced",
+  "field": "fiqih-syafii",
+  "description": "Kitab induk fiqih Syafi‘i karya Imam An-Nawawi yang menjadi rujukan utama ulama muta’akhkhirin. Kitab ini merangkum pendapat-pendapat mu‘tamad dalam mazhab Syafi‘i secara padat dan presisi.",
+  "recommendedUsage": "talaqqi tingkat lanjut dan ta’ahhul mazhab",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    
+  ]
+}

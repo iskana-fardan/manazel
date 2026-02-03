@@ -1,0 +1,30 @@
+{
+  "id": "nuzhatun-nadzar",
+  "title": "Nuzhatun Nadzar",
+  "titleArabic": "نزهة النظر",
+  "author": "Al-imam ibnu hajar al-asqollani",
+  "type": "dars",
+  "level": "beginner",
+  "field": "hadits",
+  "description": "kitab yang mencangkup mustholah hadist secara luas, bahasanya sedikit tinggi sehingga harus dikaji bersama guru ",
+  "recommendedUsage": "Bersama guru dan halaqoh",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    {
+      "publisher": "Dar ibn katsir",
+      "note": "memiliki tahqiq yang mempermudah pembaca",
+      "label": "recommended"
+    }
+  ]
+}

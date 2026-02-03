@@ -1,0 +1,101 @@
+[
+    {
+        "id": "fiqh_syafii",
+        "slug": "fiqh-syafii",
+        "name": "Fiqh Mazhab Syafi'i",
+        "nameArabic": "الفقه الشافعي",
+        "description": "Panduan memahami hukum Islam sehari-hari berdasarkan Mazhab Syafi'i, dari ibadah hingga muamalah.",
+        "icon": "fiqh_syafii",
+        "order": 1
+    },
+    {
+        "id": "usul_fiqh",
+        "slug": "usul-fiqh",
+        "name": "Ushul Fiqh",
+        "nameArabic": "أصول الفقه",
+        "description": "Fondasi berpikir para ulama dalam menggali hukum Islam dari Al-Qur'an dan Sunnah.",
+        "icon": "usul_fiqh",
+        "order": 2
+    },
+    {
+        "id": "nahwu",
+        "slug": "nahwu",
+        "name": "Nahwu",
+        "nameArabic": "النحو",
+        "description": "Kunci memahami struktur kalimat Arab agar tidak salah membaca dan menafsirkan teks.",
+        "icon": "nahwu",
+        "order": 3
+    }
+    ,
+    {
+        "id": "sharaf",
+        "slug": "sharaf",
+        "name": "Sharaf",
+        "nameArabic": "الصرف",
+        "description": "Mengenal perubahan bentuk kata Arab untuk memahami makna kata secara mendalam.",
+        "icon": "sharaf",
+        "order": 4
+    }
+    ,
+    {
+        "id": "balaghah",
+        "slug": "balaghah",
+        "name": "Balaghah",
+        "nameArabic": "البلاغة",
+        "description": "Menikmati keindahan, kekuatan makna, dan gaya bahasa dalam Al-Qur'an dan sastra Arab.",
+        "icon": "balaghah",
+        "order": 5
+    }
+    ,
+    {
+        "id": "hadits",
+        "slug": "hadits",
+        "name": "Hadits & Musthalah",
+        "nameArabic": "الحديث ومصطلحه",
+        "description": "Mengenal hadits Nabi ﷺ sekaligus cara menilai keabsahan dan kualitas riwayatnya.",
+        "icon": "hadits",
+        "order": 6
+    }
+    ,
+    {
+        "id": "aqidah",
+        "slug": "aqidah",
+        "name": "Aqidah",
+        "nameArabic": "العقيدة",
+        "description": "Membangun keyakinan yang lurus tentang Allah, iman, dan dasar-dasar keislaman.",
+        "icon": "aqidah",
+        "order": 7
+    }
+    ,
+    {
+        "id": "tafsir",
+        "slug": "tafsir",
+        "name": "Tafsir",
+        "nameArabic": "التفسير",
+        "description": "Menyelami makna ayat-ayat Al-Qur'an melalui penafsiran para ulama.",
+        "icon": "tafsir",
+        "order": 8
+    },
+    {
+        "id": "ulumul_quran",
+        "slug": "ulumul-quran",
+        "name": "Ulumul Qur'an",
+        "nameArabic": "علوم القرآن",
+        "description": "Memahami Al-Qur'an dari sisi sejarah turunnya, qira'at, hingga ilmu-ilmu pendukungnya.",
+        "icon": "ulumul_quran",
+        "order": 9
+    }
+    ,
+    {
+        "id": "others",
+        "slug": "others",
+        "name": "Ilmu Pendukung",
+        "nameArabic": "علوم أخرى",
+        "description": "Berbagai ilmu tambahan yang melengkapi dan memperkaya perjalanan belajar Islam.",
+        "icon": "others",
+        "order": 10
+    }
+
+
+
+]

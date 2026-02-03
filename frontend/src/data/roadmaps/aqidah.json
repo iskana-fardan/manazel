@@ -1,0 +1,41 @@
+{
+    "id": "aqidah",
+    "field": "aqidah",
+    "title": "Aqidah",
+    "titleArabic": "العقيدة",
+    "description": "Roadmap pembelajaran ilmu Aqidah dari dasar hingga lanjutan",
+    "icon": "aqidah",
+    "levels": [
+        {
+        "id": "beginner",
+        "label": "Beginner",
+        "order": 1,
+        "dars": [
+            {
+            "id": "ajurrumiyyah",
+            "bookId": "ajurrumiyyah",
+            "affectsProgress": true
+            }
+        ]
+        },
+        {
+        "id": "intermediate",
+        "label": "Intermediate",
+        "order": 2,
+        "dars": []
+        },
+        {
+        "id": "advanced",
+        "label": "Advanced",
+        "order": 3,
+        "dars": []
+        }
+    ],
+    "muthalaah": [
+        {
+        "id": "al-khasais",
+        "bookId": "al-khasais",
+        "label": "Pengayaan"
+        }
+    ]
+    }

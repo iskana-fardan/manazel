@@ -1,0 +1,30 @@
+ {
+  "id": "syarah-makudi-alal-alfiyyah-ibn-malik",
+  "title": "syarah makudi 'alal alfiyyah ibn malik",
+  "titleArabic": "شرح المكودي على الألفية بن مالك",
+  "author": "عبد الرحمن بن علي بن صالح المكودي",
+  "type": "dars",
+  "level": "intermediate",
+  "field": "nahwu",
+  "description": "kitab mutawassith yang sangat simple di tingkatannya",
+  "recommendedUsage": "bersama guru", 
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    {
+      "publisher": "maktabah ashriyyah(مكتبة العصرية)",
+      "note": "-",
+      "label": "recommended"
+    }
+  ]
+}

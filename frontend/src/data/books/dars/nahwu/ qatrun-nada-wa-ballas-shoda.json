@@ -1,0 +1,30 @@
+{
+  "id": "qatrun-nada-wa-ballas-shoda",
+  "title": "Qatrun Nada wa Ballas shoda",
+  "titleArabic": "قطر الندى و بل الصدى",
+  "author": "ابن هشام الأنصاري النحوي",
+  "type": "dars",
+  "level": "beginner",
+  "field": "nahwu",
+  "description": "kitab yang sangat dibutuhkan untuk mencapai tingkat mutawassith",
+  "recommendedUsage": "bersama guru", 
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    {
+      "publisher": "dar faiha",
+      "note": "disertakan langsung dengan hasyiyah suja'i",
+      "label": "recommended"
+    }
+  ]
+}

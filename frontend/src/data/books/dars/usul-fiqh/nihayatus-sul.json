@@ -1,0 +1,26 @@
+{
+   "id": "nihayatus-sul",
+  "title": "Nihayatus Sul",
+  "titleArabic": "نهاية السول في شرح منهاج الوصول",
+  "author": "Al-Isnawi",
+  "type": "dars",
+  "level": "advanced",
+  "field": "usul-fiqh",
+  "description": "Kitab ushul fiqh tingkat lanjut yang merupakan syarah mendalam atas Jam‘ul Jawāmi‘. Membahas permasalahan ushul secara analitis dan aplikatif untuk melatih kemampuan istinbath hukum.",
+  "recommendedUsage": "talaqqi tingkat lanjut dan bahts masail",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+  
+  ]
+}

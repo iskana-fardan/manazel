@@ -1,0 +1,30 @@
+{
+  "id": "taysir-mustholahul-hadist",
+  "title": " Taysir Mustholahul Hadist",
+  "titleArabic": "تيسير مصطلح الحديث",
+  "author": "Dr. Mahmud at-tahhan",
+  "type": "muthalaah",
+  "level": "beginner",
+  "field": "hadist",
+  "description": "kitab pengantar ilmu musthalah hadis yang disusun ringkas, sistematis, dan mudah dipahami. Kitab ini sangat cocok untuk pemula maupun mahasiswa lintas jurusan karena merangkum istilah-istilah pokok hadis dengan contoh sederhana dan bahasa modern.",
+  "recommendedUsage": "Mandiri",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    {
+      "publisher": "Dār al-Ma‘ārif ",
+      "note": "Cetakan Taysīr ‘Ulūm al-Ḥadīṡ terbitan Dār al-Ma‘ārif dikenal rapi, jelas, dan cocok untuk pembelajaran dasar karena tata letaknya memudahkan pembaca. Namun, edisi ini umumnya tanpa nukat atau ta‘liq ilmiah, sehingga lebih tepat sebagai pegangan pemula, bukan rujukan kajian kritis",
+      "label": "recommended"
+    }
+  ]
+}

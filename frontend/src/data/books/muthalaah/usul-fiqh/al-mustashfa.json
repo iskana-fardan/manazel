@@ -1,0 +1,26 @@
+{
+    "id": "al-mustashfa",
+  "title": "Al-Mustashfa",
+  "titleArabic": "المستصفى من علم الأصول",
+  "author": "Imam Al-Ghazali",
+  "type": "muthalaah",
+  "level": "advanced",
+  "field": "usul-fiqh",
+  "description": "Kitab ushul fiqh monumental karya Imam Al-Ghazali yang membahas teori hukum Islam secara mendalam, filosofis, dan metodologis. Sangat penting untuk memperluas wawasan dan kedalaman berpikir dalam ushul fiqh.",
+  "recommendedUsage": "muthalaah mandiri dan pendalaman konseptual",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+   
+  ]
+}

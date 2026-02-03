@@ -1,0 +1,35 @@
+{
+  "id": "",
+  "title": "",
+  "titleArabic": "",
+  "author": "",
+  "type": "",
+  "level": "",
+  "field": "",
+  "description": "",
+  "recommendedUsage": "", 
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    {
+      "publisher": "",
+      "note": "",
+      "label": ""
+    },
+    {
+      "publisher": "",
+      "note": "",
+      "label": ""
+    }
+  ]
+}

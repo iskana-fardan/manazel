@@ -1,0 +1,41 @@
+{
+    "id": "sharaf",
+    "field": "sharaf",
+    "title": "Sharaf",
+    "titleArabic": "الصرف",
+    "description": "Roadmap pembelajaran ilmu Sharaf dari dasar hingga lanjutan",
+    "icon": "sharaf",
+    "levels": [
+        {
+        "id": "beginner",
+        "label": "Beginner",
+        "order": 1,
+        "dars": [
+            {
+            "id": "ajurrumiyyah",
+            "bookId": "ajurrumiyyah",
+            "affectsProgress": true
+            }
+        ]
+        },
+        {
+        "id": "intermediate",
+        "label": "Intermediate",
+        "order": 2,
+        "dars": []
+        },
+        {
+        "id": "advanced",
+        "label": "Advanced",
+        "order": 3,
+        "dars": []
+        }
+    ],
+    "muthalaah": [
+        {
+        "id": "al-khasais",
+        "bookId": "al-khasais",
+        "label": "Pengayaan"
+        }
+    ]
+    }

@@ -1,0 +1,26 @@
+{
+   "id": "al-waroqat",
+  "title": "Al-Waroqat",
+  "titleArabic": "الورقات",
+  "author": "Imam Al-Haramain Al-Juwaini",
+  "type": "dars",
+  "level": "beginner",
+  "field": "usul-fiqh",
+  "description": "Kitab ushul fiqh tingkat dasar yang merangkum konsep-konsep utama seperti hukum syar‘i, dalil, ijma’, qiyas, dan istidlal secara sangat ringkas. Menjadi pintu masuk utama ushul fiqh dalam mazhab Syafi‘i.",
+  "recommendedUsage": "talaqqi dasar dan hafalan",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+   
+  ]
+}

@@ -1,0 +1,25 @@
+{
+   "id": "safinah-an-najah",
+  "title": "Safinah An-Najah",
+  "titleArabic": "سفينة النجاة",
+  "author": "Salim bin Sumair Al-Hadhrami",
+  "type": "dars",
+  "level": "beginner",
+  "field": "fiqih-syafii",
+  "description": "Kitab fiqih Syafi‘i tingkat dasar yang membahas fondasi ibadah seperti thaharah, shalat, puasa, dan akidah secara sangat ringkas dan praktis. Cocok sebagai pintu masuk fiqih Syafi‘i bagi pemula.",
+  "recommendedUsage": "talaqqi dasar dan hafalan",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+  ]
+}

@@ -1,0 +1,50 @@
+{
+    "id": "usul_fiqh",
+    "field": "usul-fiqh",
+    "title": "Ushul Fiqh",
+    "titleArabic": "أصول الفقه",
+    "description": "Roadmap pembelajaran ilmu Ushul Fiqh dari dasar hingga lanjutan",
+    "icon": "usul_fiqh",
+    "levels": [
+        {
+        "id": "beginner",
+        "label": "Beginner",
+        "order": 1,
+        "dars": [
+            {
+            "id": "al-waroqat",
+            "bookId": "al-waroqat"
+            }
+        ]
+        },
+        {
+        "id": "intermediate",
+        "label": "Intermediate",
+        "order": 2,
+        "dars": [
+            {
+            "id": "jamul-jawamik",
+            "bookId": "jamul-jawamik"
+            }
+        ]
+        },
+        {
+        "id": "advanced",
+        "label": "Advanced",
+        "order": 3,
+        "dars": [
+            {
+            "id": "nihayatus-sul",
+            "bookId": "nihayatus-sul"
+            }
+        ]
+        }
+    ],
+    "muthalaah": [
+        {
+        "id": "al-mustashfa",
+        "bookId": "al-mustashfa",
+        "label": "Pengayaan"
+        }
+    ]
+}

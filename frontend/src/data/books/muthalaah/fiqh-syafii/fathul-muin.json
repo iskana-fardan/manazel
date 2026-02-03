@@ -1,0 +1,26 @@
+{
+   "id": "fathul-muin",
+  "title": "Fathul Mu'in",
+  "titleArabic": "فتح المعين",
+  "author": "Zainuddin Al-Malibari",
+  "type": "mutolaah",
+  "level": "advanced",
+  "field": "fiqih-syafii",
+  "description": "Kitab fiqih Syafi‘i tingkat lanjut yang bersifat aplikatif dan kaya pembahasan kasus. Sangat cocok untuk mutola‘ah dan pendalaman fiqih setelah memahami kerangka mazhab.",
+  "recommendedUsage": "mutolaah mandiri dan pengayaan fiqih",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+
+  ]
+}

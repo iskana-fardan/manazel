@@ -1,0 +1,26 @@
+{
+  "id": "jamul-jawamik",
+  "title": "Jam'ul Jawamik",
+  "titleArabic": "جمع الجوامع",
+  "author": "Tajuddin As-Subki",
+  "type": "dars",
+  "level": "intermediate",
+  "field": "usul-fiqh",
+  "description": "Kitab ushul fiqh komprehensif yang menggabungkan berbagai pendapat ulama ushul dari beragam madrasah, dengan dominasi metodologi Syafi‘iyyah. Menjadi rujukan utama sebelum masuk ke level puncak.",
+  "recommendedUsage": "talaqqi intensif dan diskusi ushul",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+  
+  ]
+}

@@ -1,0 +1,41 @@
+{
+    "id": "tafsir",
+    "field": "tafsir",
+    "title": "Tafsir",
+    "titleArabic": "التفسير",
+    "description": "Roadmap pembelajaran ilmu Tafsir dari dasar hingga lanjutan",
+    "icon": "tafsir",
+    "levels": [
+        {
+        "id": "beginner",
+        "label": "Beginner",
+        "order": 1,
+        "dars": [
+            {
+            "id": "ajurrumiyyah",
+            "bookId": "ajurrumiyyah",
+            "affectsProgress": true
+            }
+        ]
+        },
+        {
+        "id": "intermediate",
+        "label": "Intermediate",
+        "order": 2,
+        "dars": []
+        },
+        {
+        "id": "advanced",
+        "label": "Advanced",
+        "order": 3,
+        "dars": []
+        }
+    ],
+    "muthalaah": [
+        {
+        "id": "al-khasais",
+        "bookId": "al-khasais",
+        "label": "Pengayaan"
+        }
+    ]
+    }

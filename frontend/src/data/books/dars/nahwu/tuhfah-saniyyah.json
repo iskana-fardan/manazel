@@ -1,0 +1,30 @@
+{
+  "id": "tuhfah-saniyyah",
+  "title": "Tuhfah Saniyyah",
+  "titleArabic": "التحفة السنية",
+  "author": "محي الدين عبد الحميد",
+  "type": "dars",
+  "level": "beginner",
+  "field": "nahwu",
+  "description": "kitab yang sangat cocok untuk mubtadi'.",
+  "recommendedUsage": "Bersama Guru", 
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    {
+      "publisher": "Dar tahqiq Al-kitab",
+      "note": "lebih banyak ma'lumat yang diberikan oleh pena'liq",
+      "label": "recommended"
+    }
+  ]
+}

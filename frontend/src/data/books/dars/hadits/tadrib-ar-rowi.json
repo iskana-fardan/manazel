@@ -1,0 +1,35 @@
+{
+  "id": "tadrib-ar-rowi",
+  "title": "Tadrib Ar-rowi",
+  "titleArabic": "تدريب الراوي",
+  "author": "Al-imam jalaluddin as-suyuthi",
+  "type": "dars",
+  "level": "intermediate",
+  "field": "hadist",
+  "description": "kitab penting dalam ‘ulūm al-ḥadīṡ yang merupakan syarah dan penyempurna dari Taqrīb an-Nawawī. Kitab ini membahas kaidah-kaidah musthalah hadis secara sistematis, disertai pendapat ulama dan contoh aplikatif.",
+  "recommendedUsage": "talaqqi dan halaqoh",
+  "resources": [
+    {
+      "label": "Sharh Audio",
+      "type": "audio",
+      "url": "https://example.com/audio-ajurrumiyyah"
+    },
+    {
+      "label": "PDF",
+      "type": "pdf",
+      "url": "https://example.com/ajurrumiyyah.pdf"
+    }
+  ],
+  "recommendedEditions": [
+    {
+      "publisher": "Dar Al-Minhaj",
+      "note": "Ditahqiq oleh seorang muhaddist Prof.Dr Muhammad Awwamah, harga tergolong tinggi",
+      "label": "recommended"
+    },
+    {
+      "publisher": "Dar ibn kastir",
+      "note": "harga lebih terjangkau",
+      "label": "alternative"
+    }
+  ]
+}
