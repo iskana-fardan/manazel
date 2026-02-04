@@ -11,8 +11,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "config": "^4.2.0",
     "debug": "^4.4.3",
+    "dotenv": "^17.2.3",
     "express": "^5.2.1"
   }
 }

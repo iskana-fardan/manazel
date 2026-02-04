@@ -1,8 +1,10 @@
-const config = require("config");
+const dotenv = require("dotenv");
+dotenv.config();
+
 const debug = require("debug")("app:startup");
 const app = require("./app");
 
-const port = config.get("server.port");
-app.listen(port, () => {
-  debug(`Listening on port ${port}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  debug(`Listening on port ${PORT}`);
 });
