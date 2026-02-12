@@ -1,20 +1,54 @@
-import { Box } from "@mui/material"
-import { Outlet } from "react-router-dom"
-import Sidebar from "../components/Sidebar"
-import Topbar from "../components/Topbar"
+import * as React from "react";
+import { Box, CssBaseline, useMediaQuery, useTheme } from "@mui/material";
+import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
 
-export default function AdminLayout() {
+import type { ReactNode } from "react";
+
+interface AdminLayoutProps {
+  children: ReactNode;
+}
+
+const drawerWidth = 240;
+
+export default function AdminLayout({ children }:AdminLayoutProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <CssBaseline />
 
-      <Box sx={{ flexGrow: 1 }}>
-        <Topbar />
+      <Topbar
+        drawerWidth={drawerWidth}
+        isMobile={isMobile}
+        onMenuClick={handleDrawerToggle}
+      />
 
-        <Box sx={{ p: 3 }}>
-          <Outlet />
-        </Box>
+      <Sidebar
+        drawerWidth={drawerWidth}
+        isMobile={isMobile}
+        mobileOpen={mobileOpen}
+        onClose={handleDrawerToggle}
+      />
+
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          mt: 8,
+          width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
+        }}
+      >
+        {children}
       </Box>
     </Box>
-  )
+  );
 }
