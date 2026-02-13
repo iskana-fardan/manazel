@@ -3,10 +3,12 @@ const fields = require("./routes/field.routes");
 const roadmaps = require("./routes/roadmap.routes");
 const books = require("./routes/book.routes");
 const contributors = require("./routes/contributor.routes");
+const cookieParser = require("cookie-parser");
 const app = express();
 
-//
+// global middleware
 app.use(express.json());
+app.use(cookieParser());
 
 // ===== routes =====
 
