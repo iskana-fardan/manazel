@@ -1,4 +1,5 @@
 const express = require("express");
+const auth = require("./routes/auth.routes");
 const fields = require("./routes/field.routes");
 const roadmaps = require("./routes/roadmap.routes");
 const books = require("./routes/book.routes");
@@ -23,5 +24,8 @@ app.use("/api/contributors", contributors);
 
 // books
 app.use("/api/books", books);
+
+// auth
+app.use("/api/auth", auth);
 
 module.exports = app;
