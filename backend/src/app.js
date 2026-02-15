@@ -5,9 +5,16 @@ const roadmaps = require("./routes/roadmap.routes");
 const books = require("./routes/book.routes");
 const contributors = require("./routes/contributor.routes");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const app = express();
 
 // global middleware
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 

@@ -1,24 +1,19 @@
 import * as React from "react";
 import { Box, CssBaseline, useMediaQuery, useTheme } from "@mui/material";
+import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
-import type { ReactNode } from "react";
-
-interface AdminLayoutProps {
-  children: ReactNode;
-}
-
 const drawerWidth = 240;
 
-export default function AdminLayout({ children }:AdminLayoutProps) {
+export default function AdminLayout() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    setMobileOpen((prev) => !prev);
   };
 
   return (
@@ -47,7 +42,7 @@ export default function AdminLayout({ children }:AdminLayoutProps) {
           width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
         }}
       >
-        {children}
+        <Outlet />
       </Box>
     </Box>
   );
