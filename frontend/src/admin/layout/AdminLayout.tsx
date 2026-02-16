@@ -9,7 +9,6 @@ const drawerWidth = 240;
 export default function AdminLayout() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -17,15 +16,10 @@ export default function AdminLayout() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
 
-      <Topbar
-        drawerWidth={drawerWidth}
-        isMobile={isMobile}
-        onMenuClick={handleDrawerToggle}
-      />
-
+      {/* Sidebar */}
       <Sidebar
         drawerWidth={drawerWidth}
         isMobile={isMobile}
@@ -33,16 +27,29 @@ export default function AdminLayout() {
         onClose={handleDrawerToggle}
       />
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          mt: 8,
-          width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
-        }}
-      >
-        <Outlet />
+      {/* RIGHT SIDE WRAPPER */}
+      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+        
+        {/* Topbar */}
+        <Topbar
+          drawerWidth={drawerWidth}
+          isMobile={isMobile}
+          onMenuClick={handleDrawerToggle}
+        />
+
+        {/* Main Content */}
+        <Box
+          component="main"
+          sx={{
+            flex: 1,
+            mt:3,
+            p: 3,
+            width: '100%',
+            overflow: "auto",
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

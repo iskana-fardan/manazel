@@ -6,7 +6,7 @@ exports.getFields = async (req, res) => {
     return res.status(404).send("No fields found");
   }
 
-  res.status(200).send("get fields succesfully");
+  res.status(200).send(fields);
 };
 
 exports.createField = async (req, res) => {

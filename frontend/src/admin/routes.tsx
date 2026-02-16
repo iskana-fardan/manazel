@@ -5,8 +5,9 @@ import AdminGuard from "./routes/AdminGuard";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import BooksPage from "./pages/BooksPage";
-import FieldsPage from "./pages/FieldsPage";
+
 import RoadmapsPage from "./pages/RoadmapsPage";
+import FieldsPage from "./features/fields/FieldsPage";
 
 export const adminRoutes: RouteObject = {
   path: "/admin",
