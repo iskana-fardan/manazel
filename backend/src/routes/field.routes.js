@@ -8,4 +8,7 @@ router.get("/", c.getFields);
 // create a field
 router.post("/", c.createField);
 
+// delete a field
+router.delete("/:id", c.deleteField);
+
 module.exports = router;
