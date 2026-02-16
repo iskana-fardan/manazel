@@ -1,4 +1,5 @@
 const { Field, validate } = require("../models/field.model");
+const mongoose = require("mongoose");
 
 exports.getFields = async (req, res) => {
   const fields = await Field.find();
@@ -33,17 +34,17 @@ exports.createField = async (req, res) => {
 };
 
 exports.deleteField = async (req, res) => {
-  try {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    const deleted = await Field.findByIdAndDelete(id);
-
-    if (!deleted) {
-      return res.status(404).json({ message: "Field not found" });
-    }
-
-    res.json({ message: "Field deleted" });
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid ID" });
   }
+
+  const deleted = await Field.findByIdAndDelete(id);
+
+  if (!deleted) {
+    return res.status(404).json({ message: "Field not found" });
+  }
+
+  res.json({ message: "Field deleted" });
 };

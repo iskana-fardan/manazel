@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
+const asyncMiddleware = require("../middleware/async.middleware");
 const c = require("../controllers/field.controller");
 
 // get the fields, for all users
-router.get("/", c.getFields);
+router.get("/", asyncMiddleware(c.getFields));
 
 // create a field
-router.post("/", c.createField);
+router.post("/", asyncMiddleware(c.createField));
 
 // delete a field
-router.delete("/:id", c.deleteField);
+router.delete("/:id", asyncMiddleware(c.deleteField));
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const express = require("express");
+const error = require("./middleware/error.middleware");
 const auth = require("./routes/auth.routes");
 const fields = require("./routes/field.routes");
 const roadmaps = require("./routes/roadmap.routes");
@@ -34,5 +35,8 @@ app.use("/api/books", books);
 
 // auth
 app.use("/api/auth", auth);
+
+// handle errors
+app.use(error);
 
 module.exports = app;
