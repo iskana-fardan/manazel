@@ -48,3 +48,35 @@ exports.deleteField = async (req, res) => {
 
   res.json({ message: "Field deleted" });
 };
+
+exports.updateField = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid ID" });
+  }
+
+  //  validasi body
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { slug, name, nameArabic, description, icon, order } = req.body;
+
+  // cek duplicate slug kalau slug berubah
+  const existingField = await Field.findOne({ slug, _id: { $ne: id } });
+  if (existingField)
+    return res.status(400).json({ message: "Slug already exists" });
+
+  // update
+  const updated = await Field.findByIdAndUpdate(
+    id,
+    { slug, name, nameArabic, description, icon, order },
+    { new: true }, // return document after update
+  );
+
+  if (!updated) {
+    return res.status(404).json({ message: "Field not found" });
+  }
+
+  res.json(updated);
+};

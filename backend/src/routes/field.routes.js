@@ -12,4 +12,7 @@ router.post("/", asyncMiddleware(c.createField));
 // delete a field
 router.delete("/:id", asyncMiddleware(c.deleteField));
 
+// update a field
+router.put("/:id", c.updateField);
+
 module.exports = router;
