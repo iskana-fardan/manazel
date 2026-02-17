@@ -1,14 +1,14 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const debug = require("debug")("app:startup");
+const logger = require("./startup/logging");
 const app = require("./app");
-const connectDB = require("./config/db");
+const connectDB = require("./startup/db");
 
 // Connect to DB
 connectDB();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  debug(`Listening on port ${PORT}`);
+  logger.info(`Listening on port ${PORT}`);
 });

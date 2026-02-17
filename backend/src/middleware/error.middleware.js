@@ -1,5 +1,7 @@
+const logger = require("../startup/logging");
+
 module.exports = function (err, req, res, next) {
-  console.error(err); // logging
+  logger.error(err.message, { stack: err.stack });
 
   res.status(500).send("Internal server error");
 };
