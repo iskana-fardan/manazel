@@ -6,105 +6,127 @@ import {
   TextField,
   Button,
   Stack,
+  CircularProgress,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { fieldSchema, type FieldFormValues } from "./field.schema";
 import type { Field } from "./fields.types";
 
-interface FieldDialogProps {
+interface Props {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Partial<Field>) => void;
+  onSubmit: (data: FieldFormValues) => void;
   initialData?: Field | null;
+  loading?: boolean;
 }
-
-const emptyForm: Partial<Field> = {
-  name: "",
-  nameArabic: "",
-  slug: "",
-  description: "",
-  icon: "",
-  order: 0,
-};
 
 export default function FieldDialog({
   open,
   onClose,
   onSubmit,
   initialData,
-}: FieldDialogProps) {
+  loading,
+}: Props) {
 
-  const [form, setForm] = useState<Partial<Field>>(
-    initialData ?? emptyForm
-  );
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FieldFormValues>({
+    resolver: zodResolver(fieldSchema), // “Setiap kali form disubmit, validasinya pakai schema ini.”
+    defaultValues: {
+      name: "",
+      nameArabic: "",
+      slug: "",
+      description: "",
+      icon: "",
+      order: 0,
+    },
+  });
 
-  const handleChange = <K extends keyof Field>(
-    key: K,
-    value: Field[K]
-  ) => {
-    setForm(prev => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const handleSubmit = () => {
-    onSubmit(form);
-  };
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData); // “Isi ulang semua value form dengan data ini.”
+    } else {
+      reset({
+        name: "",
+        nameArabic: "",
+        slug: "",
+        description: "",
+        icon: "",
+        order: 0,
+      });
+    }
+  }, [initialData, reset]);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        {initialData ? "Edit Field" : "Add New Field"}
+        {initialData ? "Edit Field" : "Add Field"}
       </DialogTitle>
 
-      <DialogContent>
-        <Stack spacing={2} mt={1}>
-          <TextField
-            label="Name"
-            value={form.name ?? ""}
-            onChange={e => handleChange("name", e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label="Arabic Name"
-            value={form.nameArabic ?? ""}
-            onChange={e => handleChange("nameArabic", e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label="Slug"
-            value={form.slug ?? ""}
-            onChange={e => handleChange("slug", e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label="Description"
-            value={form.description ?? ""}
-            onChange={e => handleChange("description", e.target.value)}
-            multiline
-            rows={3}
-          />
-          <TextField
-            label="Icon"
-            value={form.icon ?? ""}
-            onChange={e => handleChange("icon", e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label="Order"
-            type="number"
-            value={form.order ?? 0}
-            onChange={e => handleChange("order", Number(e.target.value))}
-          />
-        </Stack>
-      </DialogContent>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent>
+          <Stack spacing={2} mt={1}>
+            <TextField
+              label="Name"
+              {...register("name")}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+              fullWidth
+            />
 
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit}>
-          {initialData ? "Update" : "Create"}
-        </Button>
-      </DialogActions>
+            <TextField
+              label="Arabic Name"
+              {...register("nameArabic")}
+              fullWidth
+            />
+
+            <TextField
+              label="Slug"
+              {...register("slug")}
+              error={!!errors.slug}
+              helperText={errors.slug?.message}
+              fullWidth
+            />
+
+            <TextField
+              label="Description"
+              {...register("description")}
+              multiline
+              rows={3}
+            />
+
+            <TextField
+              label="Icon"
+              {...register("icon")}
+            />
+
+            <TextField
+              label="Order"
+              type="number"
+              {...register("order", { valueAsNumber: true })}
+              error={!!errors.order}
+              helperText={errors.order?.message}
+            />
+
+          </Stack>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={20} /> : initialData ? "Update" : "Create"}
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }

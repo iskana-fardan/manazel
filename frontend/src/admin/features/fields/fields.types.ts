@@ -1,3 +1,5 @@
+// ini types dari backend a.k.a sesuai backend
+// sedangkan fields.types itu buat validasi dari frontend
 export interface Field {
   _id: string;
   name: string;
@@ -8,3 +10,4 @@ export interface Field {
   order?: number;
   createdAt?: string;
 }
+

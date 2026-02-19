@@ -7,28 +7,47 @@ const fieldSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
+      lowercase: true,
     },
-    name: String,
-    nameArabic: String,
-    description: String,
-    icon: String,
-    order: Number,
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    nameArabic: {
+      type: String,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    icon: {
+      type: String,
+      trim: true,
+    },
+    order: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
   },
-  { timestamps: true }, // MongoDB otomatis nambahin metadata waktu ke tiap dokumen
+  { timestamps: true },
 );
 
 const Field = mongoose.model("Field", fieldSchema);
 
-// validate field
 function validateField(field) {
   const schema = Joi.object({
     slug: Joi.string().required(),
-    name: Joi.string(),
-    nameArabic: Joi.string(),
-    description: Joi.string(),
-    icon: Joi.string(),
-    order: Joi.number(),
+    name: Joi.string().required(),
+    nameArabic: Joi.string().required(),
+    description: Joi.string().required(),
+    icon: Joi.string().required(),
+    order: Joi.number().required(),
   });
+
   return schema.validate(field);
 }
 

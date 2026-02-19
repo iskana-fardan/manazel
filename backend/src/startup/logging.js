@@ -1,26 +1,76 @@
 const winston = require("winston");
+const path = require("path");
+const fs = require("fs");
 
-const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json(),
-  ),
-  transports: [
-    new winston.transports.File({ filename: "logfile.log" }),
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-  ],
-});
+const { combine, timestamp, errors, json, printf, colorize } = winston.format;
 
-winston.exceptions.handle(
-  new winston.transports.File({ filename: "uncaughtExceptions.log" }),
+// 1. Setup Logs Directory
+const logsDir = path.join(__dirname, "../../logs");
+
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
+
+// 2. Environment
+const isProduction = process.env.NODE_ENV === "production";
+
+const level = isProduction ? "info" : "debug";
+
+// 3. Formats
+const devFormat = combine(
+  colorize(),
+  timestamp(),
+  errors({ stack: true }),
+  printf(({ level, message, timestamp, stack }) => {
+    // custom formatter buat tampilan akhir
+    return stack
+      ? `[${timestamp}] ${level}: ${stack}`
+      : `[${timestamp}] ${level}: ${message}`;
+  }),
 );
 
-winston.rejections.handle(
-  new winston.transports.File({ filename: "uncaughtRejections.log" }),
+const prodFormat = combine(timestamp(), errors({ stack: true }), json());
+
+// 4. Create Logger
+const logger = winston.createLogger({
+  level,
+  format: prodFormat,
+  transports: [
+    // Error log (only errors)
+    new winston.transports.File({
+      filename: path.join(logsDir, "error.log"),
+      level: "error",
+    }),
+
+    // All logs
+    new winston.transports.File({
+      filename: path.join(logsDir, "combined.log"),
+    }),
+  ],
+  exitOnError: false, // supaya process gk auto mati (kita kontrol sendiri)
+});
+
+// 5. Console Transport (Dev Only)
+if (!isProduction) {
+  logger.add(
+    new winston.transports.Console({
+      format: devFormat,
+    }),
+  );
+}
+
+// 6. Handle Uncaught Exceptions
+logger.exceptions.handle(
+  new winston.transports.File({
+    filename: path.join(logsDir, "exceptions.log"),
+  }),
+);
+
+// 7. Handle Unhandled Rejections
+logger.rejections.handle(
+  new winston.transports.File({
+    filename: path.join(logsDir, "rejections.log"),
+  }),
 );
 
 module.exports = logger;

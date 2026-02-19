@@ -24,7 +24,6 @@ const FieldsTable = ({ fields = [], onEdit, onDelete }: FieldsTableProps) => {
       renderCell: (params) => (
         <>
           <IconButton onClick={() => {
-            console.log(params)
             onEdit(params.row)
           }}>
             <Edit />

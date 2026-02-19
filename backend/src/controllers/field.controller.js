@@ -2,7 +2,7 @@ const { Field, validate } = require("../models/field.model");
 const mongoose = require("mongoose");
 
 exports.getFields = async (req, res) => {
-  const fields = await Field.find();
+  const fields = await Field.find().sort({ order: 1 });
   if (!fields || fields.length === 0) {
     return res.status(404).send("No fields found");
   }
@@ -56,22 +56,19 @@ exports.updateField = async (req, res) => {
     return res.status(400).json({ message: "Invalid ID" });
   }
 
-  //  validasi body
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const { slug, name, nameArabic, description, icon, order } = req.body;
 
-  // cek duplicate slug kalau slug berubah
   const existingField = await Field.findOne({ slug, _id: { $ne: id } });
   if (existingField)
     return res.status(400).json({ message: "Slug already exists" });
 
-  // update
   const updated = await Field.findByIdAndUpdate(
     id,
     { slug, name, nameArabic, description, icon, order },
-    { new: true }, // return document after update
+    { new: true, runValidators: true },
   );
 
   if (!updated) {
