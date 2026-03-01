@@ -34,32 +34,32 @@ const Book = mongoose.model("Book", bookSchema);
 // validate book
 function validateBook(book) {
   const schema = Joi.object({
-    title: Joi.string().min(3).max(255).required(), // Title harus string dan wajib ada
-    titleArabic: Joi.string().min(3).max(255).optional(), // Opsional dan panjang minimal 3 karakter
-    author: Joi.string().min(3).max(255).required(), // Author harus string dan wajib ada
-    type: Joi.string().optional(), // Opsional
-    level: Joi.string().optional(), // Opsional
-    field: Joi.string().optional(), // Opsional
-    description: Joi.string().max(500).optional(), // Description bisa lebih panjang
-    recommendedUsage: Joi.string().max(500).optional(), // recommendedUsage juga opsional
+    title: Joi.string().min(3).max(255).required(),
+    titleArabic: Joi.string().min(3).max(255).optional(),
+    author: Joi.string().min(3).max(255).required(),
+    type: Joi.string().optional(),
+    level: Joi.string().optional(),
+    field: Joi.string().optional(),
+    description: Joi.string().max(500).optional(),
+    recommendedUsage: Joi.string().max(500).optional(),
     resources: Joi.array()
       .items(
         Joi.object({
-          label: Joi.string().min(3).max(255).required(), // Label wajib ada dan harus string
-          type: Joi.string().min(3).max(100).required(), // Type harus string dan wajib ada
-          url: Joi.string().uri().required(), // URL harus valid
+          label: Joi.string().min(3).max(255).required(),
+          type: Joi.string().min(3).max(100).required(),
+          url: Joi.string().uri().required(),
         }).required(),
       )
-      .optional(), // Resources opsional, tapi jika ada harus sesuai schema
+      .optional(),
     recommendedEditions: Joi.array()
       .items(
         Joi.object({
-          publisher: Joi.string().min(3).max(255).optional(), // Publisher opsional
-          note: Joi.string().min(3).max(255).optional(), // Note opsional
-          label: Joi.string().min(3).max(255).required(), // Label wajib ada
+          publisher: Joi.string().min(3).max(255).optional(),
+          note: Joi.string().min(3).max(255).optional(),
+          label: Joi.string().min(3).max(255).required(),
         }).optional(),
       )
-      .optional(), // recommendedEditions opsional, tapi jika ada harus sesuai schema
+      .optional(),
   });
 
   return schema.validate(book);
