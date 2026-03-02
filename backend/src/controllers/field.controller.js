@@ -3,10 +3,6 @@ const mongoose = require("mongoose");
 
 exports.getFields = async (req, res) => {
   const fields = await Field.find().sort({ order: 1 });
-  if (!fields || fields.length === 0) {
-    return res.status(404).send("No fields found");
-  }
-
   res.status(200).send(fields);
 };
 
