@@ -3,10 +3,6 @@ const { Contributor, validate } = require("../models/contributor.model");
 
 exports.getContributors = async (req, res) => {
   const contributors = await Contributor.find();
-  if (!contributors || contributors.length === 0) {
-    return res.status(404).send("No contributors found");
-  }
-
   res.status(200).send(contributors);
 };
 
