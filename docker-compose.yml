@@ -10,9 +10,8 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:5000/api
-    depends_on:
-      - backend
+      - VITE_API_URL=http://backend:5000/api
+    command: npm run dev
 
   backend:
     build: ./backend
@@ -27,8 +26,7 @@ services:
       - NODE_ENV=development
       - MONGO_URI=mongodb://db:27017/peta_ilmu_islam
       - JWT_SECRET=super_rahasia
-    depends_on:
-      - db
+    command: npm run dev
 
   db:
     image: mongo:7.0-jammy
