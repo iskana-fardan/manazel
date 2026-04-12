@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "DEBUG=app:*,db:* nodemon src/server.js",
     "start": "node src/server.js"
   },
@@ -24,6 +24,7 @@
     "winston": "^3.19.0"
   },
   "devDependencies": {
+    "jest": "^30.3.0",
     "nodemon": "^3.1.14"
   }
 }
