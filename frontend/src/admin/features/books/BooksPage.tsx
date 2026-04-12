@@ -1,20 +1,20 @@
 import { Box, Stack } from "@mui/material";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import FieldHeader from "./FieldHeader";
-import FieldsTable from "./FieldsTable";
-import FieldDialog from "./FieldDialog";
+import BookHeader from "./BookHeader";
 import api from "../../services/api";
-import type { Field } from "./fields.types";
-import type { FieldFormValues } from "./field.schema";
+import type { Book } from "./books.types";
+import type { BookFormValues } from "./book.schema";
+import BooksTable from "./BooksTable";
+import BookDialog from "./BookDialog";
 
 
-export default function FieldsPage() {
+export default function BooksPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<Field | null>(null);
+  const [selected, setSelected] = useState<Book | null>(null);
 
-  const { data = [] } = useQuery<Field[]>({
+  const { data: fields = [] } = useQuery({
     queryKey: ["fields"],
     queryFn: async () => {
       const { data } = await api.get("/fields");
@@ -22,33 +22,41 @@ export default function FieldsPage() {
     },
   });
 
+  const { data = [] } = useQuery<Book[]>({
+    queryKey: ["books"],
+    queryFn: async () => {
+      const { data } = await api.get("/books");
+      return data;
+    },
+  });
+
   const createMutation = useMutation({
-    mutationFn: (payload: FieldFormValues) =>
-      api.post("/fields", payload),
+    mutationFn: (payload: BookFormValues) =>
+      api.post("/books", payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fields"] });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
       setOpen(false);
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: (payload: FieldFormValues) =>
-      api.put(`/fields/${selected?._id}`, payload),
+    mutationFn: (payload: BookFormValues) =>
+      api.put(`/books/${selected?._id}`, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fields"] });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
       setOpen(false);
       setSelected(null);
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => api.delete(`/fields/${id}`),
+    mutationFn: (id: string) => api.delete(`/books/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fields"] });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
     },
   });
 
-  const handleSubmit = (data: FieldFormValues) => {
+  const handleSubmit = (data: BookFormValues) => {
     if (selected) {
       updateMutation.mutate(data);
     } else {
@@ -59,27 +67,27 @@ export default function FieldsPage() {
   return (
     <Box p={3}>
       <Stack spacing={3}>
-        <FieldHeader
+        <BookHeader
           onAdd={() => {
             setSelected(null);
             setOpen(true);
           }}
         />
 
-        <FieldsTable
-          fields={data}
-          onEdit={(field) => {
-            setSelected(field);
+        <BooksTable
+          books={data}
+          onEdit={(book) => {
+            setSelected(book);
             setOpen(true);
           }}
-          onDelete={(field) => {
-            if (confirm(`Delete ${field.name}?`)) {
-              deleteMutation.mutate(field._id);
+          onDelete={(book) => {
+            if (confirm(`Delete ${book.title}?`)) {
+              deleteMutation.mutate(book._id);
             }
           }}
         />
 
-        <FieldDialog
+        <BookDialog
           open={open}
           onClose={() => {
             setOpen(false);
@@ -87,6 +95,7 @@ export default function FieldsPage() {
           }}
           onSubmit={handleSubmit}
           initialData={selected}
+          fields={fields}
           loading={
             createMutation.isPending || updateMutation.isPending
           }
@@ -95,4 +104,8 @@ export default function FieldsPage() {
     </Box>
   );
 }
+
+
+
+
 
