@@ -1,51 +1,44 @@
 import * as React from "react";
-import { Box, CssBaseline, useMediaQuery, useTheme } from "@mui/material";
+import { Box, CssBaseline, Toolbar, useMediaQuery, useTheme } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
-const drawerWidth = 240;
+const DRAWER_WIDTH = 240;
 
 export default function AdminLayout() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen((prev) => !prev);
-  };
-
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
 
-      {/* Sidebar */}
       <Sidebar
-        drawerWidth={drawerWidth}
+        drawerWidth={DRAWER_WIDTH}
         isMobile={isMobile}
         mobileOpen={mobileOpen}
-        onClose={handleDrawerToggle}
+        onClose={() => setMobileOpen(false)}
       />
 
-      {/* RIGHT SIDE WRAPPER */}
-      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
-        
-        {/* Topbar */}
+      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         <Topbar
-          drawerWidth={drawerWidth}
+          drawerWidth={DRAWER_WIDTH}
           isMobile={isMobile}
-          onMenuClick={handleDrawerToggle}
+          onMenuClick={() => setMobileOpen((p) => !p)}
         />
 
-        {/* Main Content */}
+        {/* Spacer equal to AppBar height */}
+        <Toolbar />
+
         <Box
           component="main"
           sx={{
             flex: 1,
-            mt:5,
-            p: 3,
-            width: '100%',
+            p: { xs: 2, sm: 3 },
             overflow: "auto",
+            bgcolor: "background.default",
           }}
         >
           <Outlet />

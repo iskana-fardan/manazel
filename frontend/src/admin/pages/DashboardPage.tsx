@@ -6,13 +6,18 @@ import RecentContributorsTable from "../features/dashboard/RecentContributorsTab
 export default function DashboardPage() {
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Dashboard
-      </Typography>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h5" fontWeight={700}>
+          Dashboard
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+          Overview of all data in the system.
+        </Typography>
+      </Box>
 
       <StatsSection />
 
-      <Grid container spacing={3} sx={{ mt: 1 }}>
+      <Grid container spacing={3} sx={{ mt: 0.5 }}>
         <Grid size={{ xs: 12, lg: 7 }}>
           <RecentBooksTable />
         </Grid>
