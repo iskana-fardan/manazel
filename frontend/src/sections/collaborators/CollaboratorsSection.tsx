@@ -20,7 +20,7 @@ export default function CollaboratorsSection() {
     <Box>
       <Container maxWidth="lg" sx={{ pt: 3 }}>
         {/* Back */}
-        <Stack spacing={3} mt={{ xs: 7, md: 9 }} mx={1} py={2}>
+        <Stack spacing={3} mt={{ xs: 8, sm: 10, md: 11 }} mx={1} py={2}>
           <IconButton
             disableRipple
             component={NavLink}

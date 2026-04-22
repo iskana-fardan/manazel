@@ -113,7 +113,7 @@ const RoadmapDetailPage = () => {
                 height: { xs: 44, sm: 48 },
                 borderRadius: "8px",
                 bgcolor: theme.palette.teal[100],
-                color: "white",
+                color: "common.white",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",

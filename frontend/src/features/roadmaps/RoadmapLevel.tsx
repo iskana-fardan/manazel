@@ -30,7 +30,7 @@ const RoadmapLevel = ({books,  title , color }: Props) => {
       onChange={() => setExpanded(!expanded)}
       disableGutters
       sx={{
-        bgcolor: "#0b0b0b",
+        bgcolor: "background.paper",
         borderLeft: "2px solid",
         borderColor: "divider",
         "&::before": {

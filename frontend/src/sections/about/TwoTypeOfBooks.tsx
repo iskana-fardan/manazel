@@ -66,7 +66,7 @@ const TwoTypeOfBooks = () => {
                                                                 width: 40,
                                                                 height: 40,
                                                                 borderRadius: "8px",
-                                                                backgroundColor: "rgba(255,255,255,0.06)", // subtle
+                                                                backgroundColor: theme.palette.action.hover,
                                                                 color: theme.palette.teal[200],
                                                             }}
                                                     >
@@ -96,18 +96,12 @@ const TwoTypeOfBooks = () => {
                                                 </Typography>
 
                                                 {/* Lists */}
-                                                <Stack 
-                                                        spacing={1} 
+                                                <Stack
+                                                        spacing={1}
                                                         sx={{
-                                                            mt:{
-                                                                xs: 5.8,
-                                                                sm: 6,
-                                                                md: 6.2,
-                                                                lg: 6.4
-                                                            },
+                                                            mt: 6,
                                                             px: 4,
-                                    
-                                                        }} 
+                                                        }}
                                                     >
                                                     {item.lists.map((listItem)=>(
                                                             <Stack

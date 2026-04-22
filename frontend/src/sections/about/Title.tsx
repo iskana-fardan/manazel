@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 const Title = () => {
   return (
     <>
-    <Stack spacing={3} mt={11} mx={1} py={2}>
+    <Stack spacing={3} mt={{ xs: 8, sm: 10, md: 11 }} mx={1} py={2}>
         {/* Back */}
         <IconButton
           disableRipple
