@@ -1,12 +1,13 @@
 import { Box, Stack } from "@mui/material";
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import FieldHeader from "./FieldHeader";
 import FieldsTable from "./FieldsTable";
 import FieldDialog from "./FieldDialog";
 import api from "../../services/api";
 import type { Field } from "./fields.types";
 import type { FieldFormValues } from "./field.schema";
+import { useCreateField, useFields } from "../../../hooks/useFields";
 
 
 export default function FieldsPage() {
@@ -14,22 +15,12 @@ export default function FieldsPage() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Field | null>(null);
 
-  const { data = [] } = useQuery<Field[]>({
-    queryKey: ["fields"],
-    queryFn: async () => {
-      const { data } = await api.get("/fields");
-      return data;
-    },
-  });
 
-  const createMutation = useMutation({
-    mutationFn: (payload: FieldFormValues) =>
-      api.post("/fields", payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fields"] });
-      setOpen(false);
-    },
-  });
+  // ambil fields
+  const { data: fields = [] } = useFields(); 
+
+  // tambah field
+  const createMutation = useCreateField();
 
   const updateMutation = useMutation({
     mutationFn: (payload: FieldFormValues) =>
@@ -52,7 +43,11 @@ export default function FieldsPage() {
     if (selected) {
       updateMutation.mutate(data);
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(data, {
+        onSuccess: () => {
+          setOpen(false);
+        }
+      });
     }
   };
 
@@ -67,7 +62,7 @@ export default function FieldsPage() {
         />
 
         <FieldsTable
-          fields={data}
+          fields={fields}
           onEdit={(field) => {
             setSelected(field);
             setOpen(true);

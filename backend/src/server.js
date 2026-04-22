@@ -4,6 +4,7 @@ dotenv.config();
 const logger = require("./startup/logging");
 const app = require("./app");
 const connectDB = require("./startup/db");
+const { applyTimestamps } = require("./models/admin.model");
 
 // Connect to DB
 connectDB();

@@ -7,6 +7,7 @@ import type { Book } from "./books.types";
 import type { BookFormValues } from "./book.schema";
 import BooksTable from "./BooksTable";
 import BookDialog from "./BookDialog";
+import { useBooks } from "../../../hooks/useBooks";
 
 
 export default function BooksPage() {
@@ -22,13 +23,10 @@ export default function BooksPage() {
     },
   });
 
-  const { data = [] } = useQuery<Book[]>({
-    queryKey: ["books"],
-    queryFn: async () => {
-      const { data } = await api.get("/books");
-      return data;
-    },
-  });
+
+  const { data: books = [] } = useBooks();
+
+
 
   const createMutation = useMutation({
     mutationFn: (payload: BookFormValues) =>
@@ -75,7 +73,7 @@ export default function BooksPage() {
         />
 
         <BooksTable
-          books={data}
+          books={books}
           onEdit={(book) => {
             setSelected(book);
             setOpen(true);

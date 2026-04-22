@@ -6,7 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import BooksPage from "./features/books/BooksPage";
 
-import RoadmapsPage from "./pages/RoadmapsPage";
+import RoadmapsPage from "./features/roadmaps/RoadmapsPage";
 import FieldsPage from "./features/fields/FieldsPage";
 import ContributorsPage from "./features/contributors/ContributorsPage";
 
