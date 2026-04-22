@@ -1,22 +1,15 @@
 import Grid from "@mui/material/Grid"
 import { Stack, Typography } from "@mui/material"
-
-const categories = [
-  "Fikih",
-  "Ushul Fikih",
-  "Nahwu",
-  "Sharaf",
-  "Balaghah",
-  "Aqidah",
-  "Hadis & Musthalah",
-  "Tafsir",
-]
-
-const middle = Math.ceil(categories.length / 2)
-const leftCategories = categories.slice(0, middle)
-const rightCategories = categories.slice(middle)
+import { Link } from "react-router-dom"
+import { useFields } from "../../hooks/useFields"
 
 const LearningCategories = () => {
+  const { data: fields = [] } = useFields()
+
+  const middle = Math.ceil(fields.length / 2)
+  const leftFields = fields.slice(0, middle)
+  const rightFields = fields.slice(middle)
+
   return (
     //  ini item footer (3 kolom desktop)
     <Grid size={{ xs: 12, md: 4 }}>
@@ -30,13 +23,15 @@ const LearningCategories = () => {
           {/* KIRI */}
           <Grid size={6}>
             <Stack spacing={1}>
-              {leftCategories.map((item) => (
+              {leftFields.map((field) => (
                 <Typography
-                  key={item}
+                  key={field.slug}
                   variant="body2"
-                  sx={{ color: "text.secondary" }}
+                  component={Link}
+                  to={`/roadmap/${field.slug}`}
+                  sx={{ color: "text.secondary", textDecoration: "none" }}
                 >
-                  {item}
+                  {field.name}
                 </Typography>
               ))}
             </Stack>
@@ -45,13 +40,15 @@ const LearningCategories = () => {
           {/* KANAN */}
           <Grid size={6}>
             <Stack spacing={1}>
-              {rightCategories.map((item) => (
+              {rightFields.map((field) => (
                 <Typography
-                  key={item}
+                  key={field.slug}
                   variant="body2"
-                  sx={{ color: "text.secondary" }}
+                  component={Link}
+                  to={`/roadmap/${field.slug}`}
+                  sx={{ color: "text.secondary", textDecoration: "none" }}
                 >
-                  {item}
+                  {field.name}
                 </Typography>
               ))}
             </Stack>
