@@ -16,7 +16,7 @@ const roadmapSchema = new mongoose.Schema(
     description: String,
     icon: String,
     levels: [levelSchema],
-    muthalaah: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+    muthalaah: [levelSchema],
   },
   { timestamps: true },
 );
@@ -24,23 +24,21 @@ const roadmapSchema = new mongoose.Schema(
 const Roadmap = mongoose.model("Roadmap", roadmapSchema);
 
 function validateRoadmap(roadmap) {
+  const levelItemSchema = Joi.object({
+    slug: Joi.string().required(),
+    label: Joi.string().min(3).max(100).required(),
+    order: Joi.number().integer().required(),
+    books: Joi.array().items(Joi.objectId()).optional(),
+  });
+
   const schema = Joi.object({
     field: Joi.string().required(),
     title: Joi.string().min(3).max(255).required(),
     titleArabic: Joi.string().min(3).max(255).optional(),
     description: Joi.string().max(500).optional(),
     icon: Joi.string().uri().optional(),
-    levels: Joi.array()
-      .items(
-        Joi.object({
-          slug: Joi.string().required(),
-          label: Joi.string().min(3).max(100).required(),
-          order: Joi.number().integer().required(),
-          books: Joi.array().items(Joi.objectId()).optional(),
-        }).required(),
-      )
-      .optional(),
-    muthalaah: Joi.array().items(Joi.objectId()).optional(),
+    levels: Joi.array().items(levelItemSchema).optional(),
+    muthalaah: Joi.array().items(levelItemSchema).optional(),
   });
 
   return schema.validate(roadmap);

@@ -1,12 +1,15 @@
+export type LevelSection = {
+  _id?: string;
+  slug: string;
+  label: string;
+  order: number;
+  books: string[];
+};
+
 export type Roadmap = {
   _id: string;
   field: string;
   title: string;
-  levels: {
-    slug: string;
-    label: string;
-    order: number;
-    books: string[];
-  }[];
-  muthalaah: string[];
+  levels: LevelSection[];
+  muthalaah: LevelSection[];
 };
