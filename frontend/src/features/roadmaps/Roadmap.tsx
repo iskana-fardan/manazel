@@ -15,20 +15,42 @@ import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
 import RoadmapLevel from "./RoadmapLevel";
 import KitabMuthalaahCard from "./KitabMuthalaahCards";
 
-import { getFieldBySlug } from "../../data/fields";
-import { getRoadmapByFieldId } from "../../data/roadmaps";
-import {
-  getBooksByLevel,
-  getMuthalaahBooks,
-} from "../../data/roadmapHelpers";
-
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useMemo } from "react";
+import { useRoadmap } from "../../hooks/useRoadmap";
+import { useBooks } from "../../hooks/useBooks";
+import { getBooksForLevel, getBooksForMuthalaah } from "../../services/roadmaps.api";
 
 const RoadmapDetailPage = () => {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const { slug } = useParams();
+
+  const { data: roadmap, isLoading: roadmapLoading } = useRoadmap(slug!);
+  const { data: allBooks = [], isLoading: booksLoading } = useBooks();
+
+  const booksMap = useMemo(
+    () => new Map(allBooks.map((b) => [b._id, b])),
+    [allBooks]
+  );
+
+  const beginnerBooks = useMemo(
+    () => (roadmap ? getBooksForLevel(roadmap, "beginner", booksMap) : []),
+    [roadmap, booksMap]
+  );
+  const intermediateBooks = useMemo(
+    () => (roadmap ? getBooksForLevel(roadmap, "intermediate", booksMap) : []),
+    [roadmap, booksMap]
+  );
+  const advancedBooks = useMemo(
+    () => (roadmap ? getBooksForLevel(roadmap, "advanced", booksMap) : []),
+    [roadmap, booksMap]
+  );
+  const muthalaahBooks = useMemo(
+    () => (roadmap ? getBooksForMuthalaah(roadmap, booksMap) : []),
+    [roadmap, booksMap]
+  );
 
   const backToCategories = () => {
     const scrollToAnchor = () => {
@@ -45,15 +67,7 @@ const RoadmapDetailPage = () => {
     }
   };
 
-  const field = getFieldBySlug(slug);
-  const roadmap = getRoadmapByFieldId(field?.id);
-
-  const beginnerBooks = getBooksByLevel(roadmap, "beginner");
-  const intermediateBooks = getBooksByLevel(roadmap, "intermediate");
-  const advancedBooks = getBooksByLevel(roadmap, "advanced");
-
-  const muthalaahBooks = getMuthalaahBooks(roadmap);
-
+  if (roadmapLoading || booksLoading) return null;
   if (!roadmap) return null;
 
   return (

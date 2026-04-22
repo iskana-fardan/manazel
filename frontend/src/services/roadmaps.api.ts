@@ -1,4 +1,5 @@
 import type { Roadmap } from "../admin/features/roadmaps/roadmap.types";
+import type { Book } from "../admin/features/books/books.types";
 import api from "./apiClient";
 
 export const getAllRoadmaps = async (): Promise<Roadmap[]> => {
@@ -40,3 +41,21 @@ export const removeBookFromSection = async (
   );
   return data;
 };
+
+export function getBooksForLevel(
+  roadmap: Roadmap,
+  levelSlug: string,
+  booksMap: Map<string, Book>
+): Book[] {
+  const level = roadmap.levels.find((l) => l.slug === levelSlug);
+  if (!level) return [];
+  return level.books.map((id) => booksMap.get(id)).filter(Boolean) as Book[];
+}
+
+export function getBooksForMuthalaah(
+  roadmap: Roadmap,
+  booksMap: Map<string, Book>
+): Book[] {
+  return roadmap.muthalaah
+    .flatMap((section) => section.books.map((id) => booksMap.get(id)).filter(Boolean)) as Book[];
+}

@@ -194,8 +194,8 @@ const BookDetail = ({book,open, onClose}: Props) => {
                     </Typography>
 
                     <Stack spacing={1.5}>
-                        {book?.recommendedEditions.length === 0 && "-"}
-                        {book?.recommendedEditions.map((ed, i) => (
+                        {(book?.recommendedEditions?.length ?? 0) === 0 && "-"}
+                        {book?.recommendedEditions?.map((ed, i) => (
                         <Box
                             key={i}
                             sx={{
@@ -260,8 +260,8 @@ const BookDetail = ({book,open, onClose}: Props) => {
                     </Typography>
 
                     <Stack direction="row" spacing={1} mt={1}>
-                        {book?.resources.length === 0 && "-"}
-                        {book?.resources.map(resource => (
+                        {(book?.resources?.length ?? 0) === 0 && "-"}
+                        {book?.resources?.map(resource => (
                             <Button
                                 href={resource.url}
                                 size="small"

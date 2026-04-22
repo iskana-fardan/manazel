@@ -10,6 +10,9 @@ export type Roadmap = {
   _id: string;
   field: string;
   title: string;
+  titleArabic?: string;
+  description?: string;
+  icon?: string;
   levels: LevelSection[];
   muthalaah: LevelSection[];
 };

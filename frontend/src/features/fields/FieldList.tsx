@@ -7,13 +7,14 @@ import {
   useTheme,
 } from "@mui/material"
 import FieldCard from "./FieldCard";
-import { fields } from "../../data/fields/index.ts";
-
-
+import { useFields } from "../../hooks/useFields";
+import type { IconKey } from "../../assets/icons/icon";
 
 
 const FieldList= () =>{
   const theme = useTheme();
+  const { data: fields = [] } = useFields();
+
   return (
     <Box
       component="section"
@@ -22,7 +23,7 @@ const FieldList= () =>{
         py: { xs: 6,sm: 7, md: 9,lg : 11 },
         backgroundColor: theme.palette.background.paper
       }}
-      
+
     >
       <Container maxWidth="lg">
         {/* Header */}
@@ -37,27 +38,22 @@ const FieldList= () =>{
             >
               Pilih bidang ilmu untuk menjelajahi jalur pembelajaran yang terstruktur
             </Typography>
-        </Stack> 
+        </Stack>
 
 
         {/* Cards */}
         <Grid container spacing={3}>
-          {fields.map(({ name,slug, nameArabic, description, icon }, index) => {
-            return (
-                <Grid
-                    key={index}
-                    size={{ xs: 12, sm: 6 }} 
-                    >
-                        <FieldCard 
-                            name={name} 
-                            slug={slug}
-                            nameArabic={nameArabic} 
-                            description={description} 
-                            icon={icon}
-                            />
-                </Grid>
-                    )
-            })}
+          {fields.map(({ name, slug, nameArabic, description, icon }, index) => (
+            <Grid key={index} size={{ xs: 12, sm: 6 }}>
+              <FieldCard
+                name={name}
+                slug={slug}
+                nameArabic={nameArabic ?? ""}
+                description={description ?? ""}
+                icon={(icon ?? "others") as IconKey}
+              />
+            </Grid>
+          ))}
         </Grid>
       </Container>
     </Box>
