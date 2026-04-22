@@ -13,6 +13,11 @@ async function findRoadmapBySlug(fieldSlug) {
   return Roadmap.findOne({ field: field._id });
 }
 
+exports.getAllRoadmaps = async (req, res) => {
+  const roadmaps = await Roadmap.find();
+  res.status(200).send(roadmaps);
+};
+
 exports.getRoadmapByField = async (req, res) => {
   const roadmap = await findRoadmapBySlug(req.params.fieldSlug);
   if (!roadmap) return res.status(404).send("No roadmap found");

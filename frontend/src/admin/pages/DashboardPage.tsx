@@ -1,5 +1,7 @@
-import { Box, Grid, Typography } from "@mui/material"
-import StatCard from "../components/StatCard"
+import { Box, Grid, Typography } from "@mui/material";
+import StatsSection from "../features/dashboard/StatsSection";
+import RecentBooksTable from "../features/dashboard/RecentBooksTable";
+import RecentContributorsTable from "../features/dashboard/RecentContributorsTable";
 
 export default function DashboardPage() {
   return (
@@ -8,23 +10,16 @@ export default function DashboardPage() {
         Dashboard
       </Typography>
 
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 6 , md: 3 }}>
-          <StatCard label="Total Books" value={32} />
-        </Grid>
+      <StatsSection />
 
-        <Grid size={{ xs: 12, sm: 6 , md: 3 }}>
-          <StatCard label="Total Roadmaps" value={9} />
+      <Grid container spacing={3} sx={{ mt: 1 }}>
+        <Grid size={{ xs: 12, lg: 7 }}>
+          <RecentBooksTable />
         </Grid>
-
-        <Grid size={{ xs: 12, sm: 6 , md: 3 }}>
-          <StatCard label="Total Fields" value={7} />
-        </Grid>
-
-        <Grid size={{ xs: 12, sm: 6 , md: 3 }}>
-          <StatCard label="Last Update" value="Today" />
+        <Grid size={{ xs: 12, lg: 5 }}>
+          <RecentContributorsTable />
         </Grid>
       </Grid>
     </Box>
-  )
+  );
 }

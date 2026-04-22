@@ -1,6 +1,11 @@
 import type { Roadmap } from "../admin/features/roadmaps/roadmap.types";
 import api from "./apiClient";
 
+export const getAllRoadmaps = async (): Promise<Roadmap[]> => {
+  const { data } = await api.get("/roadmaps");
+  return data;
+};
+
 export const getRoadmap = async (fieldSlug: string): Promise<Roadmap> => {
   const { data } = await api.get(`/roadmaps/${fieldSlug}`);
   return data;
