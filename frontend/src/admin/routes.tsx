@@ -9,6 +9,7 @@ import BooksPage from "./features/books/BooksPage";
 import RoadmapsPage from "./features/roadmaps/RoadmapsPage";
 import FieldsPage from "./features/fields/FieldsPage";
 import ContributorsPage from "./features/contributors/ContributorsPage";
+import SettingsPage from "./features/settings/SettingsPage";
 
 export const adminRoutes: RouteObject = {
   path: "/admin",
@@ -28,6 +29,7 @@ export const adminRoutes: RouteObject = {
             { path: "roadmaps", element: <RoadmapsPage /> },
             { path: "fields", element: <FieldsPage /> },
             { path: "contributors", element: <ContributorsPage /> },
+            { path: "settings", element: <SettingsPage /> },
           ]
         }
       ]
