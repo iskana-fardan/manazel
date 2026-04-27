@@ -13,7 +13,7 @@ const AboutSection = () => {
     <Box
         component="section"
     >
-        <Container maxWidth="md">
+        <Container maxWidth="md" sx={{ pt: 3 }}>
             {/* Title */}
             <Title/>
             {/* Mission */}

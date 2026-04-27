@@ -73,12 +73,10 @@ const RoadmapDetailPage = () => {
   return (
     <Box component="main">
       {/* ===== HEADER ===== */}
-      <Container maxWidth="md">
+      <Container maxWidth="md" sx={{ pt: 3 }}>
         <Stack
           spacing={{ xs: 2.2, sm: 3 }}
           mt={{ xs: 8, sm: 10, md: 11 }} // 👈 FIX JARAK NAVBAR (mobile lebih rapet)
-          mx={1}
-          py={2}
         >
           {/* Back Button */}
           <IconButton
