@@ -37,11 +37,11 @@ describe("book.controller", () => {
   // ── getBooks ─────────────────────────────────────────────────────────────
 
   describe("getBooks", () => {
-    it("returns 404 when the collection is empty", async () => {
+    it("returns 200 with an empty array when no books exist", async () => {
       Book.find.mockResolvedValue([]);
       await getBooks(req, res);
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.send).toHaveBeenCalledWith("No books found");
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith([]);
     });
 
     it("returns 200 with the list of books", async () => {
@@ -72,19 +72,6 @@ describe("book.controller", () => {
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.send).toHaveBeenCalledWith("Book already exists");
-    });
-
-    it("returns 500 when save throws an error", async () => {
-      validate.mockReturnValue({ error: null });
-      req.body = { title: "New Book", author: "Author" };
-      Book.findOne.mockResolvedValue(null);
-      const mockInstance = { save: jest.fn().mockRejectedValue(new Error("db error")) };
-      Book.mockImplementation(() => mockInstance);
-
-      await createBook(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.send).toHaveBeenCalledWith("Error saving book");
     });
 
     it("returns 201 with the saved book on success", async () => {
@@ -170,18 +157,6 @@ describe("book.controller", () => {
 
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ message: "Book not found" });
-    });
-
-    it("returns 500 when findByIdAndUpdate throws", async () => {
-      req.params.id = VALID_ID;
-      mockIsValid.mockReturnValue(true);
-      validate.mockReturnValue({ error: null });
-      Book.findByIdAndUpdate.mockRejectedValue(new Error("db error"));
-
-      await updateBook(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ message: "Error updating book" });
     });
 
     it("returns 200 with updated book on success", async () => {

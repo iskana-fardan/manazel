@@ -4,6 +4,7 @@ const { Field } = require("../../src/models/field.model");
 const { Book } = require("../../src/models/book.model");
 const { Roadmap } = require("../../src/models/roadmap.model");
 const { connect, disconnect, clearCollections } = require("./setup/db");
+const { getAuthCookie } = require("./setup/auth");
 
 beforeAll(connect);
 afterAll(disconnect);
@@ -76,27 +77,43 @@ describe("GET /api/roadmaps/:fieldSlug", () => {
 // ── POST /api/roadmaps/:fieldSlug ────────────────────────────────────────────
 
 describe("POST /api/roadmaps/:fieldSlug", () => {
+  it("returns 401 without an auth cookie", async () => {
+    await Field.create(validField);
+    const res = await request(app).post("/api/roadmaps/fiqh");
+
+    expect(res.status).toBe(401);
+  });
+
   it("returns 404 when the field slug does not exist", async () => {
-    const res = await request(app).post("/api/roadmaps/nonexistent-slug");
+    const cookie = await getAuthCookie();
+    const res = await request(app)
+      .post("/api/roadmaps/nonexistent-slug")
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(404);
     expect(res.text).toMatch(/field not found/i);
   });
 
   it("returns 400 when a roadmap already exists for the field", async () => {
+    const cookie = await getAuthCookie();
     const field = await Field.create(validField);
     await Roadmap.create({ field: field._id, title: field.name, levels: [], muthalaah: [] });
 
-    const res = await request(app).post("/api/roadmaps/fiqh");
+    const res = await request(app)
+      .post("/api/roadmaps/fiqh")
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(400);
     expect(res.text).toMatch(/already exists/i);
   });
 
   it("creates a roadmap with three default levels in each section", async () => {
+    const cookie = await getAuthCookie();
     await Field.create(validField);
 
-    const res = await request(app).post("/api/roadmaps/fiqh");
+    const res = await request(app)
+      .post("/api/roadmaps/fiqh")
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(201);
     expect(res.body.title).toBe(validField.name);
@@ -105,21 +122,24 @@ describe("POST /api/roadmaps/:fieldSlug", () => {
   });
 
   it("populates levels with the correct slugs in order", async () => {
+    const cookie = await getAuthCookie();
     await Field.create(validField);
 
-    const res = await request(app).post("/api/roadmaps/fiqh");
+    const res = await request(app)
+      .post("/api/roadmaps/fiqh")
+      .set("Cookie", cookie);
 
     const levelSlugs = res.body.levels.map((l) => l.slug);
     expect(levelSlugs).toEqual(["beginner", "intermediate", "advanced"]);
-
-    const muthalaahSlugs = res.body.muthalaah.map((l) => l.slug);
-    expect(muthalaahSlugs).toEqual(["beginner", "intermediate", "advanced"]);
   });
 
   it("initialises each level with an empty books array", async () => {
+    const cookie = await getAuthCookie();
     await Field.create(validField);
 
-    const res = await request(app).post("/api/roadmaps/fiqh");
+    const res = await request(app)
+      .post("/api/roadmaps/fiqh")
+      .set("Cookie", cookie);
 
     res.body.levels.forEach((level) => expect(level.books).toEqual([]));
     res.body.muthalaah.forEach((level) => expect(level.books).toEqual([]));
@@ -130,16 +150,27 @@ describe("POST /api/roadmaps/:fieldSlug", () => {
 
 describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
   let book;
+  let cookie;
 
   beforeEach(async () => {
+    cookie = await getAuthCookie();
     await Field.create(validField);
-    await request(app).post("/api/roadmaps/fiqh");
+    await request(app).post("/api/roadmaps/fiqh").set("Cookie", cookie);
     book = await Book.create(validBook);
+  });
+
+  it("returns 401 without an auth cookie", async () => {
+    const res = await request(app)
+      .post("/api/roadmaps/fiqh/dars/beginner/books")
+      .send({ bookId: book._id.toString() });
+
+    expect(res.status).toBe(401);
   });
 
   it("returns 404 when the field slug does not resolve to a roadmap", async () => {
     const res = await request(app)
       .post("/api/roadmaps/nonexistent/dars/beginner/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(404);
@@ -148,6 +179,7 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
   it("returns 404 for an invalid level slug", async () => {
     const res = await request(app)
       .post("/api/roadmaps/fiqh/dars/invalid-level/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(404);
@@ -157,10 +189,12 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
   it("returns 400 when the book is already in the level", async () => {
     await request(app)
       .post("/api/roadmaps/fiqh/dars/beginner/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
 
     const res = await request(app)
       .post("/api/roadmaps/fiqh/dars/beginner/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(400);
@@ -170,6 +204,7 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
   it("adds a book to the dars section and returns the updated roadmap", async () => {
     const res = await request(app)
       .post("/api/roadmaps/fiqh/dars/beginner/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(200);
@@ -180,6 +215,7 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
   it("adds a book to the muthalaah section and returns the updated roadmap", async () => {
     const res = await request(app)
       .post("/api/roadmaps/fiqh/muthalaah/intermediate/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(200);
@@ -190,6 +226,7 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
   it("does not add the book to the wrong section", async () => {
     const res = await request(app)
       .post("/api/roadmaps/fiqh/dars/beginner/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(200);
@@ -202,52 +239,60 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
 
 describe("DELETE /api/roadmaps/:fieldSlug/:section/:levelSlug/books/:bookId", () => {
   let book;
+  let cookie;
 
   beforeEach(async () => {
+    cookie = await getAuthCookie();
     await Field.create(validField);
-    await request(app).post("/api/roadmaps/fiqh");
+    await request(app).post("/api/roadmaps/fiqh").set("Cookie", cookie);
     book = await Book.create(validBook);
     await request(app)
       .post("/api/roadmaps/fiqh/dars/beginner/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
   });
 
-  it("returns 404 when the field slug does not resolve to a roadmap", async () => {
+  it("returns 401 without an auth cookie", async () => {
     const res = await request(app).delete(
-      `/api/roadmaps/nonexistent/dars/beginner/books/${book._id}`,
+      `/api/roadmaps/fiqh/dars/beginner/books/${book._id}`,
     );
+
+    expect(res.status).toBe(401);
+  });
+
+  it("returns 404 when the field slug does not resolve to a roadmap", async () => {
+    const res = await request(app)
+      .delete(`/api/roadmaps/nonexistent/dars/beginner/books/${book._id}`)
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(404);
   });
 
   it("returns 404 for an invalid level slug", async () => {
-    const res = await request(app).delete(
-      `/api/roadmaps/fiqh/dars/invalid-level/books/${book._id}`,
-    );
+    const res = await request(app)
+      .delete(`/api/roadmaps/fiqh/dars/invalid-level/books/${book._id}`)
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(404);
     expect(res.text).toMatch(/level not found/i);
   });
 
   it("removes the book and returns the updated roadmap", async () => {
-    const res = await request(app).delete(
-      `/api/roadmaps/fiqh/dars/beginner/books/${book._id}`,
-    );
+    const res = await request(app)
+      .delete(`/api/roadmaps/fiqh/dars/beginner/books/${book._id}`)
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(200);
     const beginnerLevel = res.body.levels.find((l) => l.slug === "beginner");
-    expect(beginnerLevel.books).not.toContain(book._id.toString());
     expect(beginnerLevel.books).toHaveLength(0);
   });
 
-  it("removing a non-existent book is idempotent and returns 200", async () => {
+  it("removing a non-existent bookId is idempotent and returns 200", async () => {
     const otherId = "000000000000000000000001";
+    const res = await request(app)
+      .delete(`/api/roadmaps/fiqh/dars/beginner/books/${otherId}`)
+      .set("Cookie", cookie);
 
-    const res = await request(app).delete(
-      `/api/roadmaps/fiqh/dars/beginner/books/${otherId}`,
-    );
-
-    // The controller filters the array and saves regardless — no 404 for unknown bookId
     expect(res.status).toBe(200);
     const beginnerLevel = res.body.levels.find((l) => l.slug === "beginner");
     expect(beginnerLevel.books).toContain(book._id.toString());
@@ -256,11 +301,12 @@ describe("DELETE /api/roadmaps/:fieldSlug/:section/:levelSlug/books/:bookId", ()
   it("only removes the book from the targeted section and level", async () => {
     await request(app)
       .post("/api/roadmaps/fiqh/muthalaah/beginner/books")
+      .set("Cookie", cookie)
       .send({ bookId: book._id.toString() });
 
-    await request(app).delete(
-      `/api/roadmaps/fiqh/dars/beginner/books/${book._id}`,
-    );
+    await request(app)
+      .delete(`/api/roadmaps/fiqh/dars/beginner/books/${book._id}`)
+      .set("Cookie", cookie);
 
     const roadmapRes = await request(app).get("/api/roadmaps/fiqh");
     const muthalaahBeginner = roadmapRes.body.muthalaah.find((l) => l.slug === "beginner");

@@ -39,7 +39,7 @@ function validateContributor(contributor) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
     role: Joi.string().min(3).max(100).required(),
-    description: Joi.string().max(500),
+    description: Joi.string().max(500).required(),
     avatar: Joi.string().uri().optional(),
     socials: Joi.object({
       github: Joi.string().uri().optional(),

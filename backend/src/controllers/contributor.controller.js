@@ -10,26 +10,10 @@ exports.createContributor = async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const {
-    name,
-    role,
-    description,
-    avatar,
-    socials: { github, instagram, website },
-  } = req.body;
+  const { name, role, description, avatar, socials = {} } = req.body;
+  const { github, instagram, website } = socials;
 
-  let contributor = new Contributor({
-    name,
-    role,
-    description,
-    avatar,
-    socials: {
-      github,
-      instagram,
-      website,
-    },
-  });
-
+  const contributor = new Contributor({ name, role, description, avatar, socials: { github, instagram, website } });
   await contributor.save();
 
   res.send(contributor);
@@ -43,10 +27,7 @@ exports.deleteContributor = async (req, res) => {
   }
 
   const deleted = await Contributor.findByIdAndDelete(id);
-
-  if (!deleted) {
-    return res.status(404).json({ message: "Contributor not found" });
-  }
+  if (!deleted) return res.status(404).json({ message: "Contributor not found" });
 
   res.json({ message: "Contributor deleted" });
 };
@@ -61,33 +42,16 @@ exports.updateContributor = async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const {
-    name,
-    role,
-    description,
-    avatar,
-    socials: { github, instagram, website },
-  } = req.body;
+  const { name, role, description, avatar, socials = {} } = req.body;
+  const { github, instagram, website } = socials;
 
   const updated = await Contributor.findByIdAndUpdate(
     id,
-    {
-      name,
-      role,
-      description,
-      avatar,
-      socials: {
-        github,
-        instagram,
-        website,
-      },
-    },
+    { name, role, description, avatar, socials: { github, instagram, website } },
     { new: true },
   );
 
-  if (!updated) {
-    return res.status(404).json({ message: "Contributor not found" });
-  }
+  if (!updated) return res.status(404).json({ message: "Contributor not found" });
 
   res.status(200).json(updated);
 };

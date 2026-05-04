@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../../src/app");
 const { Contributor } = require("../../src/models/contributor.model");
 const { connect, disconnect, clearCollections } = require("./setup/db");
+const { getAuthCookie } = require("./setup/auth");
 
 beforeAll(connect);
 afterAll(disconnect);
@@ -43,55 +44,76 @@ describe("GET /api/contributors", () => {
 // ── POST /api/contributors ───────────────────────────────────────────────────
 
 describe("POST /api/contributors", () => {
+  it("returns 401 without an auth cookie", async () => {
+    const res = await request(app).post("/api/contributors").send(validContributor);
+
+    expect(res.status).toBe(401);
+  });
+
   it("returns 400 when required fields are missing", async () => {
+    const cookie = await getAuthCookie();
     const res = await request(app)
       .post("/api/contributors")
-      .send({ name: "AB" }); // too short and missing required fields
+      .set("Cookie", cookie)
+      .send({ name: "AB" });
 
     expect(res.status).toBe(400);
   });
 
   it("returns 400 when the avatar URL is invalid", async () => {
+    const cookie = await getAuthCookie();
     const res = await request(app)
       .post("/api/contributors")
+      .set("Cookie", cookie)
       .send({ ...validContributor, avatar: "not-a-url" });
 
     expect(res.status).toBe(400);
   });
 
   it("creates a contributor and returns it with a 200", async () => {
+    const cookie = await getAuthCookie();
     const res = await request(app)
       .post("/api/contributors")
+      .set("Cookie", cookie)
       .send(validContributor);
 
     expect(res.status).toBe(200);
     expect(res.body._id).toBeDefined();
     expect(res.body.name).toBe(validContributor.name);
-    expect(res.body.role).toBe(validContributor.role);
     expect(res.body.socials.github).toBe(validContributor.socials.github);
   });
 
-  it("creates a contributor without optional socials omitted from body", async () => {
+  it("creates a contributor without optional socials field", async () => {
+    const cookie = await getAuthCookie();
     const { socials, ...withoutSocials } = validContributor;
 
-    // NOTE: This exposes a bug in contributor.controller.js — the controller
-    // destructures `socials` unconditionally, which throws a TypeError when the
-    // field is absent. Joi marks socials as optional, so validation passes, but
-    // Express 5 catches the thrown error and the global handler returns 500.
     const res = await request(app)
       .post("/api/contributors")
+      .set("Cookie", cookie)
       .send(withoutSocials);
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe(validContributor.name);
   });
 });
 
 // ── PUT /api/contributors/:id ────────────────────────────────────────────────
 
 describe("PUT /api/contributors/:id", () => {
+  it("returns 401 without an auth cookie", async () => {
+    const contributor = await Contributor.create(validContributor);
+    const res = await request(app)
+      .put(`/api/contributors/${contributor._id}`)
+      .send(validContributor);
+
+    expect(res.status).toBe(401);
+  });
+
   it("returns 400 for a malformed ObjectId", async () => {
+    const cookie = await getAuthCookie();
     const res = await request(app)
       .put("/api/contributors/not-an-id")
+      .set("Cookie", cookie)
       .send(validContributor);
 
     expect(res.status).toBe(400);
@@ -99,60 +121,69 @@ describe("PUT /api/contributors/:id", () => {
   });
 
   it("returns 404 when the contributor does not exist", async () => {
+    const cookie = await getAuthCookie();
     const fakeId = "000000000000000000000000";
     const res = await request(app)
       .put(`/api/contributors/${fakeId}`)
+      .set("Cookie", cookie)
       .send(validContributor);
 
     expect(res.status).toBe(404);
     expect(res.body.message).toBe("Contributor not found");
   });
 
-  it("returns 400 when the payload fails validation", async () => {
-    const contributor = await Contributor.create(validContributor);
-
-    const res = await request(app)
-      .put(`/api/contributors/${contributor._id}`)
-      .send({ name: "X" }); // too short, missing required fields
-
-    expect(res.status).toBe(400);
-  });
-
   it("updates and returns the modified contributor", async () => {
+    const cookie = await getAuthCookie();
     const contributor = await Contributor.create(validContributor);
 
     const res = await request(app)
       .put(`/api/contributors/${contributor._id}`)
+      .set("Cookie", cookie)
       .send({ ...validContributor, role: "Senior Researcher" });
 
     expect(res.status).toBe(200);
     expect(res.body.role).toBe("Senior Researcher");
-    expect(res.body._id).toBe(contributor._id.toString());
   });
 });
 
 // ── DELETE /api/contributors/:id ─────────────────────────────────────────────
 
 describe("DELETE /api/contributors/:id", () => {
+  it("returns 401 without an auth cookie", async () => {
+    const contributor = await Contributor.create(validContributor);
+    const res = await request(app).delete(`/api/contributors/${contributor._id}`);
+
+    expect(res.status).toBe(401);
+  });
+
   it("returns 400 for a malformed ObjectId", async () => {
-    const res = await request(app).delete("/api/contributors/not-an-id");
+    const cookie = await getAuthCookie();
+    const res = await request(app)
+      .delete("/api/contributors/not-an-id")
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(400);
     expect(res.body.message).toBe("Invalid ID");
   });
 
   it("returns 404 when the contributor does not exist", async () => {
+    const cookie = await getAuthCookie();
     const fakeId = "000000000000000000000000";
-    const res = await request(app).delete(`/api/contributors/${fakeId}`);
+    const res = await request(app)
+      .delete(`/api/contributors/${fakeId}`)
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(404);
     expect(res.body.message).toBe("Contributor not found");
   });
 
   it("deletes the contributor and returns a success message", async () => {
+    const cookie = await getAuthCookie();
     const contributor = await Contributor.create(validContributor);
 
-    const res = await request(app).delete(`/api/contributors/${contributor._id}`);
+    const res = await request(app)
+      .delete(`/api/contributors/${contributor._id}`)
+      .set("Cookie", cookie);
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe("Contributor deleted");

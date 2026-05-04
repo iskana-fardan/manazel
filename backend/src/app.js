@@ -1,43 +1,52 @@
 const express = require("express");
+const helmet = require("helmet");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const rateLimit = require("express-rate-limit");
+
 const error = require("./middleware/error.middleware");
 const auth = require("./routes/auth.routes");
 const fields = require("./routes/field.routes");
 const roadmaps = require("./routes/roadmap.routes");
 const books = require("./routes/book.routes");
 const contributors = require("./routes/contributor.routes");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
+
 const app = express();
 
-// global middleware
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  }),
-);
+// ── Security headers ─────────────────────────────────────────────────────────
+app.use(helmet());
 
-app.use(express.json());
+// ── CORS ─────────────────────────────────────────────────────────────────────
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",")
+  : true; // reflect any origin in development
+
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+
+// ── Body parsing ─────────────────────────────────────────────────────────────
+app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 
-// ===== routes =====
+// ── Rate limiting (disabled in test to avoid shared-IP false positives) ───────
+if (process.env.NODE_ENV !== "test") {
+  const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { message: "Too many login attempts, please try again later" },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use("/api/auth/login", loginLimiter);
+}
 
-// fields
+// ── Routes ────────────────────────────────────────────────────────────────────
 app.use("/api/fields", fields);
-
-// roadmaps
 app.use("/api/roadmaps/", roadmaps);
-
-// contributors
 app.use("/api/contributors", contributors);
-
-// books
 app.use("/api/books", books);
-
-// auth
 app.use("/api/auth", auth);
 
-// handle errors
+// ── Global error handler ──────────────────────────────────────────────────────
 app.use(error);
 
 module.exports = app;

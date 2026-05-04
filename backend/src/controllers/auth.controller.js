@@ -10,8 +10,7 @@ exports.login = async (req, res) => {
     if (!admin) return res.status(400).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
       { id: admin._id, role: admin.role },
@@ -47,5 +46,6 @@ exports.logout = (req, res) => {
 
 exports.me = async (req, res) => {
   const admin = await Admin.findById(req.admin.id).select("-password");
+  if (!admin) return res.status(404).json({ message: "Admin not found" });
   res.json(admin);
 };
