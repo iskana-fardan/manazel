@@ -5,6 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "test": "jest --watchAll",
+    "test:unit": "jest --watchAll=false",
+    "test:integration": "jest --config jest.integration.config.js --watchAll=false --forceExit",
+    "test:all": "jest --watchAll=false --testMatch='**/tests/**/*.test.js' --forceExit",
     "dev": "DEBUG=app:*,db:* nodemon src/server.js",
     "start": "node src/server.js"
   },
@@ -25,6 +28,8 @@
   },
   "devDependencies": {
     "jest": "^30.3.0",
-    "nodemon": "^3.1.14"
+    "mongodb-memory-server": "^11.1.0",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
   }
 }
