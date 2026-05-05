@@ -10,6 +10,12 @@ services:
     networks:
       - app_net
     # No ports exposed to host — backend reaches it via internal network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   backend:
     build:
@@ -23,7 +29,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       CORS_ORIGIN: ${CORS_ORIGIN}
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     volumes:
       - backend_logs:/app/logs
     networks:

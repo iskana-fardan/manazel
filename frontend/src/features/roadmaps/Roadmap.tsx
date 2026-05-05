@@ -1,7 +1,9 @@
 import {
   Box,
+  Button,
   Container,
   IconButton,
+  Skeleton,
   Stack,
   Typography,
   useTheme,
@@ -15,15 +17,43 @@ import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
 import RoadmapLevel from "./RoadmapLevel";
 import KitabMuthalaahCard from "./KitabMuthalaahCards";
 
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMemo } from "react";
 import { useRoadmap } from "../../hooks/useRoadmap";
 import { useBooks } from "../../hooks/useBooks";
 import { getBooksForLevel, getBooksForMuthalaah } from "../../services/roadmaps.api";
 
+function RoadmapSkeleton() {
+  return (
+    <Box component="main">
+      <Container maxWidth="md" sx={{ pt: 3 }}>
+        <Stack spacing={{ xs: 2.2, sm: 3 }} mt={{ xs: 8, sm: 10, md: 11 }}>
+          <Skeleton variant="rounded" width={160} height={30} />
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Skeleton variant="rounded" width={48} height={48} sx={{ borderRadius: "8px" }} />
+            <Stack spacing={0.5}>
+              <Skeleton variant="text" width={200} height={28} />
+              <Skeleton variant="text" width={140} height={20} />
+            </Stack>
+          </Stack>
+          <Skeleton variant="text" width="75%" height={20} />
+        </Stack>
+      </Container>
+      <Container maxWidth="md" sx={{ mt: 3, mb: 6 }}>
+        <Skeleton variant="rounded" height={64} sx={{ borderRadius: 1 }} />
+      </Container>
+      <Container maxWidth="md">
+        <Skeleton variant="text" width={160} height={32} sx={{ mb: 1 }} />
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} variant="rounded" height={72} sx={{ mb: 1, borderRadius: 1 }} />
+        ))}
+      </Container>
+    </Box>
+  );
+}
+
 const RoadmapDetailPage = () => {
   const theme = useTheme();
-  const location = useLocation();
   const navigate = useNavigate();
   const { slug } = useParams();
 
@@ -53,22 +83,36 @@ const RoadmapDetailPage = () => {
   );
 
   const backToCategories = () => {
-    const scrollToAnchor = () => {
-      document
-        .getElementById("categories")
-        ?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    if (location.pathname !== "/") {
-      navigate("/");
-      setTimeout(scrollToAnchor, 150);
-    } else {
-      scrollToAnchor();
-    }
+    navigate("/", { state: { scrollTo: "bidang-ilmu" } });
   };
 
-  if (roadmapLoading || booksLoading) return null;
-  if (!roadmap) return null;
+  if (roadmapLoading || booksLoading) return <RoadmapSkeleton />;
+
+  if (!roadmap) {
+    return (
+      <Box
+        component="main"
+        sx={{
+          minHeight: "70vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Container maxWidth="sm" sx={{ textAlign: "center" }}>
+          <Typography variant="h5" fontWeight={700} gutterBottom>
+            Roadmap tidak ditemukan
+          </Typography>
+          <Typography color="text.secondary" mb={3}>
+            Jalur belajar untuk bidang ini belum tersedia.
+          </Typography>
+          <Button variant="contained" onClick={backToCategories}>
+            Lihat Bidang Ilmu Lainnya
+          </Button>
+        </Container>
+      </Box>
+    );
+  }
 
   return (
     <Box component="main">
@@ -76,7 +120,7 @@ const RoadmapDetailPage = () => {
       <Container maxWidth="md" sx={{ pt: 3 }}>
         <Stack
           spacing={{ xs: 2.2, sm: 3 }}
-          mt={{ xs: 8, sm: 10, md: 11 }} // 👈 FIX JARAK NAVBAR (mobile lebih rapet)
+          mt={{ xs: 8, sm: 10, md: 11 }}
         >
           {/* Back Button */}
           <IconButton
@@ -104,10 +148,9 @@ const RoadmapDetailPage = () => {
             spacing={2}
             alignItems="center"
           >
-            {/* Logo / Icon */}
             <Box
               sx={{
-                width: { xs: 44, sm: 48 }, // 👈 JAGA SUPAYA GA TERLALU KECIL
+                width: { xs: 44, sm: 48 },
                 height: { xs: 44, sm: 48 },
                 borderRadius: "8px",
                 bgcolor: theme.palette.teal[100],

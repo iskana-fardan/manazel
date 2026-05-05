@@ -3,12 +3,12 @@ const { Contributor, validate } = require("../models/contributor.model");
 
 exports.getContributors = async (req, res) => {
   const contributors = await Contributor.find();
-  res.status(200).send(contributors);
+  res.status(200).json(contributors);
 };
 
 exports.createContributor = async (req, res) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { name, role, description, avatar, socials = {} } = req.body;
   const { github, instagram, website } = socials;
@@ -16,7 +16,7 @@ exports.createContributor = async (req, res) => {
   const contributor = new Contributor({ name, role, description, avatar, socials: { github, instagram, website } });
   await contributor.save();
 
-  res.send(contributor);
+  res.status(201).json(contributor);
 };
 
 exports.deleteContributor = async (req, res) => {
@@ -40,7 +40,7 @@ exports.updateContributor = async (req, res) => {
   }
 
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { name, role, description, avatar, socials = {} } = req.body;
   const { github, instagram, website } = socials;

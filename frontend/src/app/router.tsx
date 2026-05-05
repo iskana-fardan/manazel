@@ -4,6 +4,7 @@ import HomePage from "../pages/HomePage";
 import AboutPage from "../pages/AboutPage";
 import RoadmapDetailPage from "../features/roadmaps/Roadmap";
 import CollaboratorsPage from "../pages/CollaboratorsPage";
+import NotFoundPage from "../pages/NotFoundPage";
 import { adminRoutes } from "../admin/routes";
 
 export const router = createBrowserRouter([
@@ -30,10 +31,10 @@ export const router = createBrowserRouter([
                 path: "/kolaborasi",
                 element: <CollaboratorsPage/>
             },
-            // {
-            //     path: "/",
-            //     element: <NotFoundPage />
-            // },
+            {
+                path: "*",
+                element: <NotFoundPage />
+            },
         ]
     },
 

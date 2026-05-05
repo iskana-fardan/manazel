@@ -7,7 +7,7 @@ const connectDB = async () => {
 
     logger.info(`MongoDB connected: ${conn.connection.host}`);
   } catch (err) {
-    logger.info(`MongoDB connection error: ${err.message}`);
+    logger.error(`MongoDB connection error: ${err.message}`);
     process.exit(1); // stop app kalau DB gagal
   }
 };

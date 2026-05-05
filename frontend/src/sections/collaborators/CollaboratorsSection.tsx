@@ -3,23 +3,24 @@ import {
   Container,
   Grid,
   IconButton,
+  Skeleton,
   Stack,
   Typography,
   useTheme,
 } from "@mui/material"
 import CollaboratorCard from "./CollaboratorCard"
-import { collaborators } from "./collaborators.data"
+import { useContributors } from "../../hooks/useContributors"
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded"
 import { NavLink } from "react-router-dom"
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined"
 
 export default function CollaboratorsSection() {
   const theme = useTheme()
+  const { data: contributors = [], isLoading } = useContributors()
 
   return (
     <Box>
       <Container maxWidth="lg" sx={{ pt: 3 }}>
-        {/* Back */}
         <Stack spacing={{ xs: 2.2, sm: 3 }} mt={{ xs: 8, sm: 10, md: 11 }} mx={1} py={2}>
           <IconButton
             disableRipple
@@ -42,7 +43,6 @@ export default function CollaboratorsSection() {
           </IconButton>
         </Stack>
 
-        {/* Title */}
         <Stack spacing={1.4} textAlign="center" mb={{ xs: 5, md: 7 }}>
           <Typography
             sx={{
@@ -69,17 +69,21 @@ export default function CollaboratorsSection() {
           </Typography>
         </Stack>
 
-        {/* Cards Grid */}
         <Grid container spacing={{ xs: 2, md: 3 }}>
-          {collaborators.map((item) => (
-            <Grid size={{ xs:12, sm:6,md:3}} key={item.id}>
-              <CollaboratorCard data={item} />
-            </Grid>
-          ))}
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <Grid size={{ xs: 12, sm: 6, md: 3 }} key={i}>
+                  <Skeleton variant="rounded" height={260} sx={{ borderRadius: "18px" }} />
+                </Grid>
+              ))
+            : contributors.map((item) => (
+                <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item._id}>
+                  <CollaboratorCard data={item} />
+                </Grid>
+              ))}
         </Grid>
       </Container>
 
-      {/* Thank You Box */}
       <Container maxWidth="md" sx={{ pb: 10 }}>
         <Box
           sx={{
@@ -101,7 +105,7 @@ export default function CollaboratorsSection() {
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Semoga setiap kontribusi yang diberikan
-            dicatat sebagai amal jariyah dan diberkahi oleh Allah Ta‘ala.
+            dicatat sebagai amal jariyah dan diberkahi oleh Allah Ta'ala.
           </Typography>
         </Box>
       </Container>

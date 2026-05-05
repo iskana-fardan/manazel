@@ -3,17 +3,17 @@ const mongoose = require("mongoose");
 
 exports.getFields = async (req, res) => {
   const fields = await Field.find().sort({ order: 1 });
-  res.status(200).send(fields);
+  res.status(200).json(fields);
 };
 
 exports.createField = async (req, res) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { slug, name, nameArabic, description, icon, order } = req.body;
 
   let field = await Field.findOne({ slug });
-  if (field) return res.status(400).send("Field already exists");
+  if (field) return res.status(400).json({ message: "Field already exists" });
 
   field = new Field({
     slug,
@@ -26,7 +26,7 @@ exports.createField = async (req, res) => {
 
   await field.save();
 
-  res.send(field);
+  res.status(201).json(field);
 };
 
 exports.deleteField = async (req, res) => {
@@ -53,7 +53,7 @@ exports.updateField = async (req, res) => {
   }
 
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { slug, name, nameArabic, description, icon, order } = req.body;
 

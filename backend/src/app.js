@@ -13,13 +13,20 @@ const contributors = require("./routes/contributor.routes");
 
 const app = express();
 
+// ── Trust the first hop (Nginx reverse proxy) so req.ip reflects real client ─
+app.set("trust proxy", 1);
+
 // ── Security headers ─────────────────────────────────────────────────────────
 app.use(helmet());
 
 // ── CORS ─────────────────────────────────────────────────────────────────────
+if (process.env.NODE_ENV === "production" && !process.env.CORS_ORIGIN) {
+  throw new Error("CORS_ORIGIN must be set in production");
+}
+
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(",")
-  : true; // reflect any origin in development
+  : true;
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 

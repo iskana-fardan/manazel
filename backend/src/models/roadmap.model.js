@@ -28,7 +28,7 @@ function validateRoadmap(roadmap) {
     slug: Joi.string().required(),
     label: Joi.string().min(3).max(100).required(),
     order: Joi.number().integer().required(),
-    books: Joi.array().items(Joi.objectId()).optional(),
+    books: Joi.array().items(Joi.string().pattern(/^[a-f\d]{24}$/i)).optional(),
   });
 
   const schema = Joi.object({

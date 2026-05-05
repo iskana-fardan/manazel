@@ -1,4 +1,5 @@
 const winston = require("winston");
+const DailyRotateFile = require("winston-daily-rotate-file");
 const path = require("path");
 const fs = require("fs");
 
@@ -22,7 +23,6 @@ const devFormat = combine(
   timestamp(),
   errors({ stack: true }),
   printf(({ level, message, timestamp, stack }) => {
-    // custom formatter buat tampilan akhir
     return stack
       ? `[${timestamp}] ${level}: ${stack}`
       : `[${timestamp}] ${level}: ${message}`;
@@ -36,18 +36,19 @@ const logger = winston.createLogger({
   level,
   format: prodFormat,
   transports: [
-    // Error log (only errors)
-    new winston.transports.File({
-      filename: path.join(logsDir, "error.log"),
+    new DailyRotateFile({
+      filename: path.join(logsDir, "error-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
       level: "error",
+      maxFiles: "14d",
     }),
-
-    // All logs
-    new winston.transports.File({
-      filename: path.join(logsDir, "combined.log"),
+    new DailyRotateFile({
+      filename: path.join(logsDir, "combined-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
+      maxFiles: "14d",
     }),
   ],
-  exitOnError: false, // supaya process gk auto mati (kita kontrol sendiri)
+  exitOnError: false,
 });
 
 // 5. Console Transport (Dev Only)
@@ -61,15 +62,19 @@ if (!isProduction) {
 
 // 6. Handle Uncaught Exceptions
 logger.exceptions.handle(
-  new winston.transports.File({
-    filename: path.join(logsDir, "exceptions.log"),
+  new DailyRotateFile({
+    filename: path.join(logsDir, "exceptions-%DATE%.log"),
+    datePattern: "YYYY-MM-DD",
+    maxFiles: "14d",
   }),
 );
 
 // 7. Handle Unhandled Rejections
 logger.rejections.handle(
-  new winston.transports.File({
-    filename: path.join(logsDir, "rejections.log"),
+  new DailyRotateFile({
+    filename: path.join(logsDir, "rejections-%DATE%.log"),
+    datePattern: "YYYY-MM-DD",
+    maxFiles: "14d",
   }),
 );
 

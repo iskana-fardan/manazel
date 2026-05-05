@@ -9,11 +9,20 @@ import {
 import FieldCard from "./FieldCard";
 import { useFields } from "../../hooks/useFields";
 import type { IconKey } from "../../assets/icons/icon";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 
 const FieldList= () =>{
   const theme = useTheme();
+  const location = useLocation();
   const { data: fields = [] } = useFields();
+
+  useEffect(() => {
+    if (location.state?.scrollTo === "bidang-ilmu") {
+      document.getElementById("bidang-ilmu")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [location.state]);
 
   return (
     <Box
