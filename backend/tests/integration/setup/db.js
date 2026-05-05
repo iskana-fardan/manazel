@@ -6,11 +6,7 @@ let mongod;
 async function connect() {
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-
   process.env.MONGO_URI = uri;
-  process.env.JWT_SECRET = "integration_test_jwt_secret";
-  process.env.NODE_ENV = "test";
-
   await mongoose.connect(uri);
 }
 

@@ -1,41 +1,33 @@
 require("dotenv").config();
+
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Admin = require("../models/admin.model");
 
 async function seedAdmin() {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
+  const { MONGO_URI, SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD } = process.env;
 
-    const existingAdmin = await Admin.findOne({
-      email: process.env.SEED_ADMIN_EMAIL,
-    });
-
-    if (existingAdmin) {
-      console.log("Admin already exists");
-      process.exit();
-    }
-
-    const hashedPassword = await bcrypt.hash(
-      process.env.SEED_ADMIN_PASSWORD,
-      10,
-    );
-
-    const admin = new Admin({
-      name: "Super Admin",
-      email: process.env.SEED_ADMIN_EMAIL,
-      password: hashedPassword,
-      role: "admin",
-    });
-
-    await admin.save();
-
-    console.log("Admin seeded successfully!");
-    process.exit();
-  } catch (err) {
-    console.log(err);
+  if (!MONGO_URI || !SEED_ADMIN_EMAIL || !SEED_ADMIN_PASSWORD) {
+    console.error("MONGO_URI, SEED_ADMIN_EMAIL, and SEED_ADMIN_PASSWORD must be set");
     process.exit(1);
   }
+
+  await mongoose.connect(MONGO_URI);
+
+  const existing = await Admin.findOne({ email: SEED_ADMIN_EMAIL });
+  if (existing) {
+    console.log("Admin already exists");
+    process.exit(0);
+  }
+
+  const password = await bcrypt.hash(SEED_ADMIN_PASSWORD, 10);
+  await Admin.create({ name: "Super Admin", email: SEED_ADMIN_EMAIL, password, role: "admin" });
+
+  console.log("Admin seeded successfully!");
+  process.exit(0);
 }
 
-seedAdmin();
+seedAdmin().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

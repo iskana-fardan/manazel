@@ -1,6 +1,6 @@
 const request = require("supertest");
 const app = require("../../src/app");
-const { Contributor } = require("../../src/models/contributor.model");
+const Contributor = require("../../src/models/contributor.model");
 const { connect, disconnect, clearCollections } = require("./setup/db");
 const { getAuthCookie } = require("./setup/auth");
 
@@ -23,11 +23,13 @@ const validContributor = {
 // ── GET /api/contributors ────────────────────────────────────────────────────
 
 describe("GET /api/contributors", () => {
-  it("returns 200 with an empty array when no contributors exist", async () => {
+  it("returns 200 with empty data array when no contributors exist", async () => {
     const res = await request(app).get("/api/contributors");
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toEqual([]);
+    expect(res.body.meta.count).toBe(0);
   });
 
   it("returns all contributors", async () => {
@@ -37,7 +39,8 @@ describe("GET /api/contributors", () => {
     const res = await request(app).get("/api/contributors");
 
     expect(res.status).toBe(200);
-    expect(res.body).toHaveLength(2);
+    expect(res.body.data).toHaveLength(2);
+    expect(res.body.meta.count).toBe(2);
   });
 });
 
@@ -58,6 +61,7 @@ describe("POST /api/contributors", () => {
       .send({ name: "AB" });
 
     expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
   });
 
   it("returns 400 when the avatar URL is invalid", async () => {
@@ -70,17 +74,18 @@ describe("POST /api/contributors", () => {
     expect(res.status).toBe(400);
   });
 
-  it("creates a contributor and returns it with a 200", async () => {
+  it("creates a contributor and returns 201 with envelope", async () => {
     const cookie = await getAuthCookie();
     const res = await request(app)
       .post("/api/contributors")
       .set("Cookie", cookie)
       .send(validContributor);
 
-    expect(res.status).toBe(200);
-    expect(res.body._id).toBeDefined();
-    expect(res.body.name).toBe(validContributor.name);
-    expect(res.body.socials.github).toBe(validContributor.socials.github);
+    expect(res.status).toBe(201);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data._id).toBeDefined();
+    expect(res.body.data.name).toBe(validContributor.name);
+    expect(res.body.data.socials.github).toBe(validContributor.socials.github);
   });
 
   it("creates a contributor without optional socials field", async () => {
@@ -92,8 +97,8 @@ describe("POST /api/contributors", () => {
       .set("Cookie", cookie)
       .send(withoutSocials);
 
-    expect(res.status).toBe(200);
-    expect(res.body.name).toBe(validContributor.name);
+    expect(res.status).toBe(201);
+    expect(res.body.data.name).toBe(validContributor.name);
   });
 });
 
@@ -122,9 +127,8 @@ describe("PUT /api/contributors/:id", () => {
 
   it("returns 404 when the contributor does not exist", async () => {
     const cookie = await getAuthCookie();
-    const fakeId = "000000000000000000000000";
     const res = await request(app)
-      .put(`/api/contributors/${fakeId}`)
+      .put("/api/contributors/000000000000000000000000")
       .set("Cookie", cookie)
       .send(validContributor);
 
@@ -142,7 +146,8 @@ describe("PUT /api/contributors/:id", () => {
       .send({ ...validContributor, role: "Senior Researcher" });
 
     expect(res.status).toBe(200);
-    expect(res.body.role).toBe("Senior Researcher");
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.role).toBe("Senior Researcher");
   });
 });
 
@@ -168,9 +173,8 @@ describe("DELETE /api/contributors/:id", () => {
 
   it("returns 404 when the contributor does not exist", async () => {
     const cookie = await getAuthCookie();
-    const fakeId = "000000000000000000000000";
     const res = await request(app)
-      .delete(`/api/contributors/${fakeId}`)
+      .delete("/api/contributors/000000000000000000000000")
       .set("Cookie", cookie);
 
     expect(res.status).toBe(404);
@@ -186,9 +190,8 @@ describe("DELETE /api/contributors/:id", () => {
       .set("Cookie", cookie);
 
     expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
     expect(res.body.message).toBe("Contributor deleted");
-
-    const found = await Contributor.findById(contributor._id);
-    expect(found).toBeNull();
+    expect(await Contributor.findById(contributor._id)).toBeNull();
   });
 });

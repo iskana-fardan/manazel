@@ -1,15 +1,15 @@
 const jwt = require("jsonwebtoken");
+const config = require("../config");
+const AppError = require("../errors/AppError");
 
-module.exports = function (req, res, next) {
-  const token = req.cookies.token;
-
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
+module.exports = function auth(req, _res, next) {
+  const token = req.cookies?.token;
+  if (!token) return next(new AppError("Unauthorized", 401));
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.admin = decoded;
+    req.admin = jwt.verify(token, config.jwt.secret);
     next();
-  } catch (err) {
-    res.status(401).json({ message: "Invalid token" });
+  } catch {
+    next(new AppError("Invalid token", 401));
   }
 };

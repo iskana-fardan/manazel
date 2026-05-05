@@ -1,12 +1,15 @@
-const express = require("express");
-const router = express.Router();
-const asyncMiddleware = require("../middleware/async.middleware");
-const authMiddleware = require("../middleware/auth.middleware");
+const { Router } = require("express");
+const auth = require("../middleware/auth.middleware");
+const validate = require("../middleware/validate.middleware");
+const validateObjectId = require("../middleware/validateObjectId.middleware");
+const { contributorBodySchema } = require("../schemas/contributor.schema");
 const c = require("../controllers/contributor.controller");
 
-router.get("/", asyncMiddleware(c.getContributors));
-router.post("/", authMiddleware, asyncMiddleware(c.createContributor));
-router.put("/:id", authMiddleware, asyncMiddleware(c.updateContributor));
-router.delete("/:id", authMiddleware, asyncMiddleware(c.deleteContributor));
+const router = Router();
+
+router.get("/", c.list);
+router.post("/", auth, validate(contributorBodySchema), c.create);
+router.put("/:id", auth, validateObjectId(), validate(contributorBodySchema), c.update);
+router.delete("/:id", auth, validateObjectId(), c.remove);
 
 module.exports = router;

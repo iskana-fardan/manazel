@@ -1,26 +1,25 @@
 const mongoose = require("mongoose");
-const Joi = require("joi");
 
 const resourceSchema = new mongoose.Schema({
-  label: String,
-  type: String,
-  url: String,
+  label: { type: String, required: true },
+  type: { type: String, required: true },
+  url: { type: String, required: true },
 });
 
 const editionSchema = new mongoose.Schema({
   publisher: String,
   note: String,
-  label: String,
+  label: { type: String, required: true },
 });
 
 const bookSchema = new mongoose.Schema(
   {
-    title: String,
+    title: { type: String, required: true },
     titleArabic: String,
-    author: String,
+    author: { type: String, required: true },
     type: String,
     level: String,
-    field: { type: String },
+    field: String,
     description: String,
     recommendedUsage: String,
     resources: [resourceSchema],
@@ -29,41 +28,4 @@ const bookSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Book = mongoose.model("Book", bookSchema);
-
-// validate book
-function validateBook(book) {
-  const schema = Joi.object({
-    title: Joi.string().min(3).max(255).required(),
-    titleArabic: Joi.string().min(3).max(255).optional(),
-    author: Joi.string().min(3).max(255).required(),
-    type: Joi.string().optional(),
-    level: Joi.string().optional(),
-    field: Joi.string().optional(),
-    description: Joi.string().max(500).optional(),
-    recommendedUsage: Joi.string().max(500).optional(),
-    resources: Joi.array()
-      .items(
-        Joi.object({
-          label: Joi.string().min(3).max(255).required(),
-          type: Joi.string().min(3).max(100).required(),
-          url: Joi.string().uri().required(),
-        }).required(),
-      )
-      .optional(),
-    recommendedEditions: Joi.array()
-      .items(
-        Joi.object({
-          publisher: Joi.string().min(3).max(255).optional(),
-          note: Joi.string().min(3).max(255).optional(),
-          label: Joi.string().min(3).max(255).required(),
-        }).optional(),
-      )
-      .optional(),
-  });
-
-  return schema.validate(book);
-}
-
-exports.Book = Book;
-exports.validate = validateBook;
+module.exports = mongoose.model("Book", bookSchema);

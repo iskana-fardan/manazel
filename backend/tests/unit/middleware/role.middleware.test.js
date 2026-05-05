@@ -1,41 +1,43 @@
-const roleMiddleware = require("../../../src/middleware/role.middleware");
+const requireRole = require("../../../src/middleware/role.middleware");
+const AppError = require("../../../src/errors/AppError");
 
-describe("roleMiddleware", () => {
-  let req, res, next;
+describe("requireRole middleware", () => {
+  let res, next;
 
   beforeEach(() => {
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+    res = {};
     next = jest.fn();
   });
 
-  it("calls next when the admin role is in the allowed list", () => {
-    req = { admin: { role: "admin" } };
-    roleMiddleware("admin", "superadmin")(req, res, next);
-    expect(next).toHaveBeenCalled();
-    expect(res.status).not.toHaveBeenCalled();
+  it("calls next() when the admin role is in the allowed list", () => {
+    const req = { admin: { role: "admin" } };
+    requireRole("admin", "superadmin")(req, res, next);
+    expect(next).toHaveBeenCalledWith();
   });
 
-  it("calls next for superadmin role", () => {
-    req = { admin: { role: "superadmin" } };
-    roleMiddleware("superadmin")(req, res, next);
-    expect(next).toHaveBeenCalled();
+  it("calls next() for superadmin role", () => {
+    const req = { admin: { role: "superadmin" } };
+    requireRole("superadmin")(req, res, next);
+    expect(next).toHaveBeenCalledWith();
   });
 
-  it("returns 403 when the admin role is not in the allowed list", () => {
-    req = { admin: { role: "admin" } };
-    roleMiddleware("superadmin")(req, res, next);
-    expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalledWith({ message: "Forbidden" });
-    expect(next).not.toHaveBeenCalled();
+  it("calls next(AppError 403) when the admin role is not in the allowed list", () => {
+    const req = { admin: { role: "admin" } };
+    requireRole("superadmin")(req, res, next);
+    expect(next).toHaveBeenCalledWith(expect.any(AppError));
+    expect(next.mock.calls[0][0].statusCode).toBe(403);
   });
 
-  it("returns 403 when no roles are allowed", () => {
-    req = { admin: { role: "admin" } };
-    roleMiddleware()(req, res, next);
-    expect(res.status).toHaveBeenCalledWith(403);
-    expect(next).not.toHaveBeenCalled();
+  it("calls next(AppError 403) when req.admin is missing", () => {
+    const req = {};
+    requireRole("admin")(req, res, next);
+    expect(next).toHaveBeenCalledWith(expect.any(AppError));
+    expect(next.mock.calls[0][0].statusCode).toBe(403);
+  });
+
+  it("calls next(AppError 403) when no roles are specified", () => {
+    const req = { admin: { role: "admin" } };
+    requireRole()(req, res, next);
+    expect(next).toHaveBeenCalledWith(expect.any(AppError));
   });
 });

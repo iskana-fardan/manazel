@@ -1,6 +1,6 @@
 const request = require("supertest");
 const app = require("../../src/app");
-const { Field } = require("../../src/models/field.model");
+const Field = require("../../src/models/field.model");
 const { connect, disconnect, clearCollections } = require("./setup/db");
 const { getAuthCookie } = require("./setup/auth");
 
@@ -20,11 +20,13 @@ const validField = {
 // ── GET /api/fields ──────────────────────────────────────────────────────────
 
 describe("GET /api/fields", () => {
-  it("returns 200 with an empty array when no fields exist", async () => {
+  it("returns 200 with empty data array when no fields exist", async () => {
     const res = await request(app).get("/api/fields");
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toEqual([]);
+    expect(res.body.meta.count).toBe(0);
   });
 
   it("returns all fields sorted by order ascending", async () => {
@@ -34,9 +36,10 @@ describe("GET /api/fields", () => {
     const res = await request(app).get("/api/fields");
 
     expect(res.status).toBe(200);
-    expect(res.body).toHaveLength(2);
-    expect(res.body[0].order).toBe(1);
-    expect(res.body[1].order).toBe(2);
+    expect(res.body.data).toHaveLength(2);
+    expect(res.body.data[0].order).toBe(1);
+    expect(res.body.data[1].order).toBe(2);
+    expect(res.body.meta.count).toBe(2);
   });
 });
 
@@ -47,6 +50,7 @@ describe("POST /api/fields", () => {
     const res = await request(app).post("/api/fields").send(validField);
 
     expect(res.status).toBe(401);
+    expect(res.body.success).toBe(false);
   });
 
   it("returns 400 when required fields are missing", async () => {
@@ -57,6 +61,7 @@ describe("POST /api/fields", () => {
       .send({ name: "Fiqh" });
 
     expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
   });
 
   it("returns 400 when slug already exists", async () => {
@@ -69,20 +74,21 @@ describe("POST /api/fields", () => {
       .send(validField);
 
     expect(res.status).toBe(400);
-    expect(res.text).toMatch(/already exists/i);
+    expect(res.body.message).toMatch(/already exists/i);
   });
 
-  it("creates the field and returns it with a 200", async () => {
+  it("creates the field and returns 201 with envelope", async () => {
     const cookie = await getAuthCookie();
     const res = await request(app)
       .post("/api/fields")
       .set("Cookie", cookie)
       .send(validField);
 
-    expect(res.status).toBe(200);
-    expect(res.body._id).toBeDefined();
-    expect(res.body.slug).toBe(validField.slug);
-    expect(res.body.order).toBe(validField.order);
+    expect(res.status).toBe(201);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data._id).toBeDefined();
+    expect(res.body.data.slug).toBe(validField.slug);
+    expect(res.body.data.order).toBe(validField.order);
   });
 
   it("stores the slug in lowercase regardless of input casing", async () => {
@@ -92,8 +98,8 @@ describe("POST /api/fields", () => {
       .set("Cookie", cookie)
       .send({ ...validField, slug: "FIQH" });
 
-    expect(res.status).toBe(200);
-    expect(res.body.slug).toBe("fiqh");
+    expect(res.status).toBe(201);
+    expect(res.body.data.slug).toBe("fiqh");
   });
 });
 
@@ -120,9 +126,8 @@ describe("PUT /api/fields/:id", () => {
 
   it("returns 404 when the field does not exist", async () => {
     const cookie = await getAuthCookie();
-    const fakeId = "000000000000000000000000";
     const res = await request(app)
-      .put(`/api/fields/${fakeId}`)
+      .put("/api/fields/000000000000000000000000")
       .set("Cookie", cookie)
       .send(validField);
 
@@ -154,10 +159,11 @@ describe("PUT /api/fields/:id", () => {
       .send({ ...validField, name: "Fiqh Updated" });
 
     expect(res.status).toBe(200);
-    expect(res.body.name).toBe("Fiqh Updated");
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.name).toBe("Fiqh Updated");
   });
 
-  it("allows updating a field's own slug without triggering duplicate error", async () => {
+  it("allows updating a field using its own slug without triggering duplicate error", async () => {
     const cookie = await getAuthCookie();
     const field = await Field.create(validField);
 
@@ -192,9 +198,8 @@ describe("DELETE /api/fields/:id", () => {
 
   it("returns 404 when the field does not exist", async () => {
     const cookie = await getAuthCookie();
-    const fakeId = "000000000000000000000000";
     const res = await request(app)
-      .delete(`/api/fields/${fakeId}`)
+      .delete("/api/fields/000000000000000000000000")
       .set("Cookie", cookie);
 
     expect(res.status).toBe(404);
@@ -210,9 +215,8 @@ describe("DELETE /api/fields/:id", () => {
       .set("Cookie", cookie);
 
     expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
     expect(res.body.message).toBe("Field deleted");
-
-    const found = await Field.findById(field._id);
-    expect(found).toBeNull();
+    expect(await Field.findById(field._id)).toBeNull();
   });
 });

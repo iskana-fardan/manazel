@@ -1,12 +1,15 @@
-const express = require("express");
-const router = express.Router();
-const asyncMiddleware = require("../middleware/async.middleware");
-const authMiddleware = require("../middleware/auth.middleware");
+const { Router } = require("express");
+const auth = require("../middleware/auth.middleware");
+const validate = require("../middleware/validate.middleware");
+const validateObjectId = require("../middleware/validateObjectId.middleware");
+const { bookBodySchema } = require("../schemas/book.schema");
 const c = require("../controllers/book.controller");
 
-router.get("/", asyncMiddleware(c.getBooks));
-router.post("/", authMiddleware, asyncMiddleware(c.createBook));
-router.put("/:id", authMiddleware, asyncMiddleware(c.updateBook));
-router.delete("/:id", authMiddleware, asyncMiddleware(c.deleteBook));
+const router = Router();
+
+router.get("/", c.list);
+router.post("/", auth, validate(bookBodySchema), c.create);
+router.put("/:id", auth, validateObjectId(), validate(bookBodySchema), c.update);
+router.delete("/:id", auth, validateObjectId(), c.remove);
 
 module.exports = router;

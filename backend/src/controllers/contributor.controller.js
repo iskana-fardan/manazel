@@ -1,57 +1,22 @@
-const mongoose = require("mongoose");
-const { Contributor, validate } = require("../models/contributor.model");
+const contributorService = require("../services/contributor.service");
+const { success } = require("../utils/response");
 
-exports.getContributors = async (req, res) => {
-  const contributors = await Contributor.find();
-  res.status(200).json(contributors);
+exports.list = async (req, res) => {
+  const contributors = await contributorService.getAll();
+  res.json(success(contributors, null, { count: contributors.length }));
 };
 
-exports.createContributor = async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).json({ message: error.details[0].message });
-
-  const { name, role, description, avatar, socials = {} } = req.body;
-  const { github, instagram, website } = socials;
-
-  const contributor = new Contributor({ name, role, description, avatar, socials: { github, instagram, website } });
-  await contributor.save();
-
-  res.status(201).json(contributor);
+exports.create = async (req, res) => {
+  const contributor = await contributorService.create(req.body);
+  res.status(201).json(success(contributor, "Contributor created"));
 };
 
-exports.deleteContributor = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid ID" });
-  }
-
-  const deleted = await Contributor.findByIdAndDelete(id);
-  if (!deleted) return res.status(404).json({ message: "Contributor not found" });
-
-  res.json({ message: "Contributor deleted" });
+exports.update = async (req, res) => {
+  const contributor = await contributorService.update(req.params.id, req.body);
+  res.json(success(contributor, "Contributor updated"));
 };
 
-exports.updateContributor = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid ID" });
-  }
-
-  const { error } = validate(req.body);
-  if (error) return res.status(400).json({ message: error.details[0].message });
-
-  const { name, role, description, avatar, socials = {} } = req.body;
-  const { github, instagram, website } = socials;
-
-  const updated = await Contributor.findByIdAndUpdate(
-    id,
-    { name, role, description, avatar, socials: { github, instagram, website } },
-    { new: true },
-  );
-
-  if (!updated) return res.status(404).json({ message: "Contributor not found" });
-
-  res.status(200).json(updated);
+exports.remove = async (req, res) => {
+  await contributorService.remove(req.params.id);
+  res.json(success(null, "Contributor deleted"));
 };

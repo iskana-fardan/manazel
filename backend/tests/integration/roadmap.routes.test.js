@@ -1,8 +1,8 @@
 const request = require("supertest");
 const app = require("../../src/app");
-const { Field } = require("../../src/models/field.model");
-const { Book } = require("../../src/models/book.model");
-const { Roadmap } = require("../../src/models/roadmap.model");
+const Field = require("../../src/models/field.model");
+const Book = require("../../src/models/book.model");
+const Roadmap = require("../../src/models/roadmap.model");
 const { connect, disconnect, clearCollections } = require("./setup/db");
 const { getAuthCookie } = require("./setup/auth");
 
@@ -28,11 +28,12 @@ const validBook = {
 // ── GET /api/roadmaps ────────────────────────────────────────────────────────
 
 describe("GET /api/roadmaps", () => {
-  it("returns 200 with an empty array when no roadmaps exist", async () => {
+  it("returns 200 with empty data array when no roadmaps exist", async () => {
     const res = await request(app).get("/api/roadmaps");
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toEqual([]);
   });
 
   it("returns all roadmaps", async () => {
@@ -42,7 +43,7 @@ describe("GET /api/roadmaps", () => {
     const res = await request(app).get("/api/roadmaps");
 
     expect(res.status).toBe(200);
-    expect(res.body).toHaveLength(1);
+    expect(res.body.data).toHaveLength(1);
   });
 });
 
@@ -70,7 +71,8 @@ describe("GET /api/roadmaps/:fieldSlug", () => {
     const res = await request(app).get("/api/roadmaps/fiqh");
 
     expect(res.status).toBe(200);
-    expect(res.body.title).toBe(validField.name);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.title).toBe(validField.name);
   });
 });
 
@@ -116,9 +118,10 @@ describe("POST /api/roadmaps/:fieldSlug", () => {
       .set("Cookie", cookie);
 
     expect(res.status).toBe(201);
-    expect(res.body.title).toBe(validField.name);
-    expect(res.body.levels).toHaveLength(3);
-    expect(res.body.muthalaah).toHaveLength(3);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.title).toBe(validField.name);
+    expect(res.body.data.levels).toHaveLength(3);
+    expect(res.body.data.muthalaah).toHaveLength(3);
   });
 
   it("populates levels with the correct slugs in order", async () => {
@@ -129,7 +132,7 @@ describe("POST /api/roadmaps/:fieldSlug", () => {
       .post("/api/roadmaps/fiqh")
       .set("Cookie", cookie);
 
-    const levelSlugs = res.body.levels.map((l) => l.slug);
+    const levelSlugs = res.body.data.levels.map((l) => l.slug);
     expect(levelSlugs).toEqual(["beginner", "intermediate", "advanced"]);
   });
 
@@ -141,8 +144,8 @@ describe("POST /api/roadmaps/:fieldSlug", () => {
       .post("/api/roadmaps/fiqh")
       .set("Cookie", cookie);
 
-    res.body.levels.forEach((level) => expect(level.books).toEqual([]));
-    res.body.muthalaah.forEach((level) => expect(level.books).toEqual([]));
+    res.body.data.levels.forEach((level) => expect(level.books).toEqual([]));
+    res.body.data.muthalaah.forEach((level) => expect(level.books).toEqual([]));
   });
 });
 
@@ -165,6 +168,15 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(401);
+  });
+
+  it("returns 400 when bookId is not a valid ObjectId", async () => {
+    const res = await request(app)
+      .post("/api/roadmaps/fiqh/dars/beginner/books")
+      .set("Cookie", cookie)
+      .send({ bookId: "not-an-id" });
+
+    expect(res.status).toBe(400);
   });
 
   it("returns 404 when the field slug does not resolve to a roadmap", async () => {
@@ -208,7 +220,7 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(200);
-    const beginnerLevel = res.body.levels.find((l) => l.slug === "beginner");
+    const beginnerLevel = res.body.data.levels.find((l) => l.slug === "beginner");
     expect(beginnerLevel.books).toContain(book._id.toString());
   });
 
@@ -219,7 +231,7 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(200);
-    const intermediateLevel = res.body.muthalaah.find((l) => l.slug === "intermediate");
+    const intermediateLevel = res.body.data.muthalaah.find((l) => l.slug === "intermediate");
     expect(intermediateLevel.books).toContain(book._id.toString());
   });
 
@@ -230,7 +242,7 @@ describe("POST /api/roadmaps/:fieldSlug/:section/:levelSlug/books", () => {
       .send({ bookId: book._id.toString() });
 
     expect(res.status).toBe(200);
-    const beginnerMuthalaah = res.body.muthalaah.find((l) => l.slug === "beginner");
+    const beginnerMuthalaah = res.body.data.muthalaah.find((l) => l.slug === "beginner");
     expect(beginnerMuthalaah.books).toHaveLength(0);
   });
 });
@@ -283,7 +295,8 @@ describe("DELETE /api/roadmaps/:fieldSlug/:section/:levelSlug/books/:bookId", ()
       .set("Cookie", cookie);
 
     expect(res.status).toBe(200);
-    const beginnerLevel = res.body.levels.find((l) => l.slug === "beginner");
+    expect(res.body.success).toBe(true);
+    const beginnerLevel = res.body.data.levels.find((l) => l.slug === "beginner");
     expect(beginnerLevel.books).toHaveLength(0);
   });
 
@@ -294,7 +307,7 @@ describe("DELETE /api/roadmaps/:fieldSlug/:section/:levelSlug/books/:bookId", ()
       .set("Cookie", cookie);
 
     expect(res.status).toBe(200);
-    const beginnerLevel = res.body.levels.find((l) => l.slug === "beginner");
+    const beginnerLevel = res.body.data.levels.find((l) => l.slug === "beginner");
     expect(beginnerLevel.books).toContain(book._id.toString());
   });
 
@@ -309,7 +322,7 @@ describe("DELETE /api/roadmaps/:fieldSlug/:section/:levelSlug/books/:bookId", ()
       .set("Cookie", cookie);
 
     const roadmapRes = await request(app).get("/api/roadmaps/fiqh");
-    const muthalaahBeginner = roadmapRes.body.muthalaah.find((l) => l.slug === "beginner");
+    const muthalaahBeginner = roadmapRes.body.data.muthalaah.find((l) => l.slug === "beginner");
     expect(muthalaahBeginner.books).toContain(book._id.toString());
   });
 });

@@ -1,75 +1,22 @@
-const { Field, validate } = require("../models/field.model");
-const mongoose = require("mongoose");
+const fieldService = require("../services/field.service");
+const { success } = require("../utils/response");
 
-exports.getFields = async (req, res) => {
-  const fields = await Field.find().sort({ order: 1 });
-  res.status(200).json(fields);
+exports.list = async (req, res) => {
+  const fields = await fieldService.getAll();
+  res.json(success(fields, null, { count: fields.length }));
 };
 
-exports.createField = async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).json({ message: error.details[0].message });
-
-  const { slug, name, nameArabic, description, icon, order } = req.body;
-
-  let field = await Field.findOne({ slug });
-  if (field) return res.status(400).json({ message: "Field already exists" });
-
-  field = new Field({
-    slug,
-    name,
-    nameArabic,
-    description,
-    icon,
-    order,
-  });
-
-  await field.save();
-
-  res.status(201).json(field);
+exports.create = async (req, res) => {
+  const field = await fieldService.create(req.body);
+  res.status(201).json(success(field, "Field created"));
 };
 
-exports.deleteField = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid ID" });
-  }
-
-  const deleted = await Field.findByIdAndDelete(id);
-
-  if (!deleted) {
-    return res.status(404).json({ message: "Field not found" });
-  }
-
-  res.json({ message: "Field deleted" });
+exports.update = async (req, res) => {
+  const field = await fieldService.update(req.params.id, req.body);
+  res.json(success(field, "Field updated"));
 };
 
-exports.updateField = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid ID" });
-  }
-
-  const { error } = validate(req.body);
-  if (error) return res.status(400).json({ message: error.details[0].message });
-
-  const { slug, name, nameArabic, description, icon, order } = req.body;
-
-  const existingField = await Field.findOne({ slug, _id: { $ne: id } });
-  if (existingField)
-    return res.status(400).json({ message: "Slug already exists" });
-
-  const updated = await Field.findByIdAndUpdate(
-    id,
-    { slug, name, nameArabic, description, icon, order },
-    { new: true, runValidators: true },
-  );
-
-  if (!updated) {
-    return res.status(404).json({ message: "Field not found" });
-  }
-
-  res.json(updated);
+exports.remove = async (req, res) => {
+  await fieldService.remove(req.params.id);
+  res.json(success(null, "Field deleted"));
 };
