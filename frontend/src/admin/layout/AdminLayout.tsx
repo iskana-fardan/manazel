@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Box, CssBaseline, Toolbar, useMediaQuery, useTheme } from "@mui/material";
+import { Box, CircularProgress, CssBaseline, Toolbar, useMediaQuery, useTheme } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import ErrorBoundary from "../../shared/components/ErrorBoundary";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
@@ -41,7 +42,15 @@ export default function AdminLayout() {
             bgcolor: "background.default",
           }}
         >
-          <Outlet />
+          <ErrorBoundary>
+            <React.Suspense fallback={
+              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
+                <CircularProgress />
+              </Box>
+            }>
+              <Outlet />
+            </React.Suspense>
+          </ErrorBoundary>
         </Box>
       </Box>
     </Box>

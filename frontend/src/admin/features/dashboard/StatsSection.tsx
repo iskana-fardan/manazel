@@ -4,10 +4,10 @@ import MapIcon from "@mui/icons-material/Map";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PeopleIcon from "@mui/icons-material/People";
 import StatCard from "../../components/StatCard";
-import { useBooks } from "../../../hooks/useBooks";
-import { useFields } from "../../../hooks/useFields";
-import { useContributors } from "../../../hooks/useContributors";
-import { useAllRoadmaps } from "../../../hooks/useRoadmaps";
+import { useBooks } from "../../../features/books/use-books";
+import { useFields } from "../../../features/fields/use-fields";
+import { useContributors } from "../../../features/contributors/use-contributors";
+import { useAllRoadmaps } from "../../../features/roadmaps/use-roadmaps";
 
 const STATS_CONFIG = [
   { label: "Total Fields",       icon: CategoryIcon,    color: "#0f766e" },

@@ -2,7 +2,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
 import { Box, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import type { Book } from "./books.types";
+import type { Book } from "../../../types/api";
 
 type BooksTableProps = {
   books?: Book[];

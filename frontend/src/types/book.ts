@@ -1,1 +1,2 @@
-export type { Book } from "../admin/features/books/books.types";
+// Legacy re-export — use src/types/api.ts directly in new code
+export type { Book } from './api';

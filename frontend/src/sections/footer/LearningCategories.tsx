@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid"
 import { Stack, Typography } from "@mui/material"
 import { Link } from "react-router-dom"
-import { useFields } from "../../hooks/useFields"
+import { useFields } from "../../features/fields/use-fields"
 
 const LearningCategories = () => {
   const { data: fields = [] } = useFields()

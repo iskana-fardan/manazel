@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -6,49 +7,43 @@ import {
   CircularProgress,
   TextField,
   Typography,
-  Alert,
-} from "@mui/material";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import api from "../services/api";
+} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { loginSchema, type LoginFormValues } from '../../features/auth/auth.schema';
+import { login } from '../../features/auth/auth.api';
+import { extractErrorMessage } from '../../lib/extract-error-message';
 
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // mencegah reload
-        setError("");
-        setLoading(true);
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => navigate('/admin', { replace: true }),
+  });
 
-        try {
-            await api.post("/auth/login", { email, password });
-            navigate("/admin", { replace: true });
-        } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                setError(err.response?.data?.message ?? "Login failed");
-            } else {
-                setError("Unexpected error occurred");
-            }
-        } finally {
-            setLoading(false);
-        }   
+  const onSubmit = (values: LoginFormValues) => {
+    mutation.mutate(values);
   };
-
 
   return (
     <Box
       sx={{
-        minHeight: "100vh",
-        width: "100vw",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         background: (theme) =>
           `linear-gradient(135deg, ${theme.palette.primary.main}22, ${theme.palette.background.default})`,
       }}
@@ -59,19 +54,21 @@ export default function LoginPage() {
             Admin Login
           </Typography>
 
-          {error && (
+          {mutation.isError && (
             <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
+              {extractErrorMessage(mutation.error)}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit}>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <TextField
               fullWidth
               label="Email"
+              type="email"
               margin="normal"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email')}
+              error={!!errors.email}
+              helperText={errors.email?.message}
             />
 
             <TextField
@@ -79,8 +76,9 @@ export default function LoginPage() {
               label="Password"
               type="password"
               margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password')}
+              error={!!errors.password}
+              helperText={errors.password?.message}
             />
 
             <Button
@@ -88,9 +86,9 @@ export default function LoginPage() {
               type="submit"
               variant="contained"
               sx={{ mt: 2, py: 1.2 }}
-              disabled={loading}
+              disabled={mutation.isPending}
             >
-              {loading ? <CircularProgress size={22} /> : "Login"}
+              {mutation.isPending ? <CircularProgress size={22} /> : 'Login'}
             </Button>
           </Box>
         </CardContent>

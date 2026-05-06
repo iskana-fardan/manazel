@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import { Link } from "react-router-dom";
-import { useBooks } from "../../../hooks/useBooks";
+import { useBooks } from "../../../features/books/use-books";
 
 const LEVEL_COLOR: Record<string, string> = {
   beginner:     "#22c55e",

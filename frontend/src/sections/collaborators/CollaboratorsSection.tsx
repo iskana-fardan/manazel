@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material"
 import CollaboratorCard from "./CollaboratorCard"
-import { useContributors } from "../../hooks/useContributors"
+import { useContributors } from "../../features/contributors/use-contributors"
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded"
 import { NavLink } from "react-router-dom"
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined"

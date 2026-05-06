@@ -11,8 +11,8 @@ import {
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { fieldSchema, type FieldFormValues } from "./field.schema";
-import type { Field } from "./fields.types";
+import { fieldSchema, type FieldFormValues } from "../../../features/fields/fields.schema";
+import type { Field } from "../../../types/api";
 
 interface Props {
   open: boolean;

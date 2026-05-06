@@ -1,7 +1,7 @@
 import { Stack, TextField, MenuItem, IconButton, Button, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Controller, useFieldArray, type Control, type UseFormRegister } from "react-hook-form";
-import type { BookFormValues } from "../book.schema";
+import type { BookFormValues } from "../../../../features/books/books.schema";
 
 interface Props {
   control: Control<BookFormValues>;

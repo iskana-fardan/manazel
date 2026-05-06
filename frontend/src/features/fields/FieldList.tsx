@@ -7,7 +7,7 @@ import {
   useTheme,
 } from "@mui/material"
 import FieldCard from "./FieldCard";
-import { useFields } from "../../hooks/useFields";
+import { useFields } from "./use-fields";
 import type { IconKey } from "../../assets/icons/icon";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";

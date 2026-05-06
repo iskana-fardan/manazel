@@ -1,93 +1,72 @@
-import { Box, Stack } from "@mui/material";
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import FieldHeader from "./FieldHeader";
-import FieldsTable from "./FieldsTable";
-import FieldDialog from "./FieldDialog";
-import api from "../../services/api";
-import type { Field } from "./fields.types";
-import type { FieldFormValues } from "./field.schema";
-import { useCreateField, useFields } from "../../../hooks/useFields";
-
+import { useState } from 'react';
+import { Box, Stack } from '@mui/material';
+import FieldHeader from './FieldHeader';
+import FieldsTable from './FieldsTable';
+import FieldDialog from './FieldDialog';
+import {
+  useFields,
+  useCreateField,
+  useUpdateField,
+  useDeleteField,
+} from '../../../features/fields/use-fields';
+import type { Field } from '../../../types/api';
+import type { FieldFormValues } from '../../../features/fields/fields.schema';
 
 export default function FieldsPage() {
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Field | null>(null);
 
+  const { data: fields = [] } = useFields();
+  const createField = useCreateField();
+  const updateField = useUpdateField();
+  const deleteField = useDeleteField();
 
-  // ambil fields
-  const { data: fields = [] } = useFields(); 
+  const isPending = createField.isPending || updateField.isPending;
 
-  // tambah field
-  const createMutation = useCreateField();
+  const handleOpen = (field?: Field) => {
+    setSelected(field ?? null);
+    setOpen(true);
+  };
 
-  const updateMutation = useMutation({
-    mutationFn: (payload: FieldFormValues) =>
-      api.put(`/fields/${selected?._id}`, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fields"] });
-      setOpen(false);
-      setSelected(null);
-    },
-  });
+  const handleClose = () => {
+    setOpen(false);
+    setSelected(null);
+  };
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => api.delete(`/fields/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fields"] });
-    },
-  });
-
-  const handleSubmit = (data: FieldFormValues) => {
+  const handleSubmit = (formData: FieldFormValues) => {
     if (selected) {
-      updateMutation.mutate(data);
+      updateField.mutate(
+        { id: selected._id, payload: formData },
+        { onSuccess: handleClose },
+      );
     } else {
-      createMutation.mutate(data, {
-        onSuccess: () => {
-          setOpen(false);
-        }
-      });
+      createField.mutate(formData, { onSuccess: handleClose });
     }
   };
 
   return (
     <Box p={3}>
       <Stack spacing={3}>
-        <FieldHeader
-          onAdd={() => {
-            setSelected(null);
-            setOpen(true);
-          }}
-        />
+        <FieldHeader onAdd={() => handleOpen()} />
 
         <FieldsTable
           fields={fields}
-          onEdit={(field) => {
-            setSelected(field);
-            setOpen(true);
-          }}
+          onEdit={handleOpen}
           onDelete={(field) => {
-            if (confirm(`Delete ${field.name}?`)) {
-              deleteMutation.mutate(field._id);
+            if (confirm(`Delete "${field.name}"?`)) {
+              deleteField.mutate(field._id);
             }
           }}
         />
 
         <FieldDialog
           open={open}
-          onClose={() => {
-            setOpen(false);
-            setSelected(null);
-          }}
+          onClose={handleClose}
           onSubmit={handleSubmit}
           initialData={selected}
-          loading={
-            createMutation.isPending || updateMutation.isPending
-          }
+          loading={isPending}
         />
       </Stack>
     </Box>
   );
 }
-

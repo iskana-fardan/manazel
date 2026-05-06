@@ -1,1 +1,1 @@
-export { default } from "../../services/apiClient";
+export { default } from "../../lib/api-client";

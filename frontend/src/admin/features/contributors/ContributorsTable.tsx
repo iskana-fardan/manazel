@@ -4,7 +4,7 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { Box, IconButton } from "@mui/material";
 import { GitHub, Instagram, Language } from "@mui/icons-material";
 import { Edit, Delete } from "@mui/icons-material";
-import type { Contributor } from "./contributors.types";
+import type { Contributor } from "../../../types/api";
 
 type ContributorsTableProps = {
   contributors?: Contributor[];

@@ -18,8 +18,8 @@ import { GitHub, Instagram, Language } from "@mui/icons-material";
 import {
   contributorSchema,
   type ContributorFormValues,
-} from "./contributor.schema";
-import type { Contributor } from "./contributors.types";
+} from "../../../features/contributors/contributors.schema";
+import type { Contributor } from "../../../types/api";
 
 interface Props {
   open: boolean;

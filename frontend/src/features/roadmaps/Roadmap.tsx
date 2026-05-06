@@ -19,9 +19,9 @@ import KitabMuthalaahCard from "./KitabMuthalaahCards";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { useMemo } from "react";
-import { useRoadmap } from "../../hooks/useRoadmap";
-import { useBooks } from "../../hooks/useBooks";
-import { getBooksForLevel, getBooksForMuthalaah } from "../../services/roadmaps.api";
+import { useRoadmap } from "./use-roadmap";
+import { useBooks } from "../books/use-books";
+import { getBooksForLevel, getBooksForMuthalaah } from "./roadmaps.api";
 
 function RoadmapSkeleton() {
   return (

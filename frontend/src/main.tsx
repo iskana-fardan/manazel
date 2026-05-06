@@ -6,6 +6,7 @@ import { RouterProvider } from "react-router-dom";
 
 import "./index.css";
 import ColorModeProvider from "./theme/ColorModeProvider.tsx";
+import NotificationProvider from "./shared/notification/NotificationProvider.tsx";
 import { router } from "./app/router.tsx";
 
 
@@ -22,7 +23,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ColorModeProvider>
-        <RouterProvider router={router} />
+        <NotificationProvider>
+          <RouterProvider router={router} />
+        </NotificationProvider>
       </ColorModeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

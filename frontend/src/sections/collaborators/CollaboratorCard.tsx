@@ -10,7 +10,7 @@ import {
 } from "@mui/material"
 import LanguageIcon from "@mui/icons-material/Language"
 import InstagramIcon from "@mui/icons-material/Instagram"
-import type { Contributor } from "../../admin/features/contributors/contributors.types"
+import type { Contributor } from "../../types/api"
 import { LuGithub} from "react-icons/lu";
 
 interface Props {

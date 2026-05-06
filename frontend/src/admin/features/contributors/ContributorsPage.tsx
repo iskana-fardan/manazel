@@ -1,94 +1,70 @@
-import { Box, Stack } from "@mui/material";
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import ContributorHeader from "./ContributorHeader";
-import api from "../../services/api";
-import type { Contributor } from "./contributors.types";
-import type { ContributorFormValues } from "./contributor.schema";
-import ContributorsTable from "./ContributorsTable";
-import ContributorDialog from "./ContributorDialog";
+import { useState } from 'react';
+import { Box, Stack } from '@mui/material';
+import ContributorHeader from './ContributorHeader';
+import ContributorsTable from './ContributorsTable';
+import ContributorDialog from './ContributorDialog';
+import {
+  useContributors,
+  useCreateContributor,
+  useUpdateContributor,
+  useDeleteContributor,
+} from '../../../features/contributors/use-contributors';
+import type { Contributor } from '../../../types/api';
+import type { ContributorFormValues } from '../../../features/contributors/contributors.schema';
 
 export default function ContributorsPage() {
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Contributor | null>(null);
 
-  const { data = [] } = useQuery<Contributor[]>({
-    queryKey: ["contributors"],
-    queryFn: async () => {
-      const { data } = await api.get("/contributors");
-      return data;
-    },
-  });
+  const { data: contributors = [] } = useContributors();
+  const createContributor = useCreateContributor();
+  const updateContributor = useUpdateContributor();
+  const deleteContributor = useDeleteContributor();
 
-  const createMutation = useMutation({
-    mutationFn: (payload: ContributorFormValues) =>
-      api.post("/contributors", payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["contributors"] });
-      setOpen(false);
-    },
-  });
+  const isPending = createContributor.isPending || updateContributor.isPending;
 
-  const updateMutation = useMutation({
-    mutationFn: (payload: ContributorFormValues) =>
-      api.put(`/contributors/${selected?._id}`, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["contributors"] });
-      setOpen(false);
-      setSelected(null);
-    },
-  });
+  const handleOpen = (contributor?: Contributor) => {
+    setSelected(contributor ?? null);
+    setOpen(true);
+  };
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => api.delete(`/contributors/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["contributors"] });
-    },
-  });
+  const handleClose = () => {
+    setOpen(false);
+    setSelected(null);
+  };
 
-  const handleSubmit = (data: ContributorFormValues) => {
+  const handleSubmit = (formData: ContributorFormValues) => {
     if (selected) {
-      updateMutation.mutate(data);
+      updateContributor.mutate(
+        { id: selected._id, payload: formData },
+        { onSuccess: handleClose },
+      );
     } else {
-      createMutation.mutate(data);
+      createContributor.mutate(formData, { onSuccess: handleClose });
     }
   };
 
   return (
     <Box p={3}>
       <Stack spacing={3}>
-        <ContributorHeader
-          onAdd={() => {
-            setSelected(null);
-            setOpen(true);
-          }}
-        />
+        <ContributorHeader onAdd={() => handleOpen()} />
 
         <ContributorsTable
-          contributors={data}
-          onEdit={(contributor) => {
-            setSelected(contributor);
-            setOpen(true);
-          }}
+          contributors={contributors}
+          onEdit={handleOpen}
           onDelete={(contributor) => {
-            if (confirm(`Delete ${contributor.name}?`)) {
-              deleteMutation.mutate(contributor._id);
+            if (confirm(`Delete "${contributor.name}"?`)) {
+              deleteContributor.mutate(contributor._id);
             }
           }}
         />
 
         <ContributorDialog
           open={open}
-          onClose={() => {
-            setOpen(false);
-            setSelected(null);
-          }}
+          onClose={handleClose}
           onSubmit={handleSubmit}
           initialData={selected}
-          loading={
-            createMutation.isPending || updateMutation.isPending
-          }
+          loading={isPending}
         />
       </Stack>
     </Box>

@@ -1,6 +1,6 @@
 import { Stack, TextField, MenuItem } from "@mui/material";
-import type { Field } from "../../fields/fields.types";
-import type { BookFormValues } from "../book.schema";
+import type { Field } from "../../../../types/api";
+import type { BookFormValues } from "../../../../features/books/books.schema";
 import {
   type Control,
   type UseFormRegister,

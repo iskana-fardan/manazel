@@ -11,14 +11,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { useBooks } from "../../../hooks/useBooks";
-import { useFields } from "../../../hooks/useFields";
+import { useBooks } from "../../../features/books/use-books";
+import { useFields } from "../../../features/fields/use-fields";
 import {
   useAddBookToSection,
   useCreateRoadmap,
   useRemoveBookFromSection,
   useRoadmap,
-} from "../../../hooks/useRoadmap";
+} from "../../../features/roadmaps/use-roadmap";
 import { LevelCard } from "./components/LevelCard";
 import { SectionCard } from "./components/SectionCard";
 

@@ -1,38 +1,37 @@
-import type { RouteObject } from "react-router-dom";
-import AdminLayout from "./layout/AdminLayout";
-import AdminGuard from "./routes/AdminGuard";
+import { lazy } from 'react';
+import type { RouteObject } from 'react-router-dom';
+import AdminLayout from './layout/AdminLayout';
+import AdminGuard from './routes/AdminGuard';
 
-import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
-import BooksPage from "./features/books/BooksPage";
-
-import RoadmapsPage from "./features/roadmaps/RoadmapsPage";
-import FieldsPage from "./features/fields/FieldsPage";
-import ContributorsPage from "./features/contributors/ContributorsPage";
-import SettingsPage from "./features/settings/SettingsPage";
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const BooksPage = lazy(() => import('./features/books/BooksPage'));
+const RoadmapsPage = lazy(() => import('./features/roadmaps/RoadmapsPage'));
+const FieldsPage = lazy(() => import('./features/fields/FieldsPage'));
+const ContributorsPage = lazy(
+  () => import('./features/contributors/ContributorsPage'),
+);
+const SettingsPage = lazy(() => import('./features/settings/SettingsPage'));
 
 export const adminRoutes: RouteObject = {
-  path: "/admin",
+  path: '/admin',
   children: [
+    { path: 'login', element: <LoginPage /> },
     {
-      path: "login",
-      element: <LoginPage/>
-    },
-    {
-      element: <AdminGuard/>,
+      element: <AdminGuard />,
       children: [
         {
-          element: <AdminLayout/>,
+          element: <AdminLayout />,
           children: [
-            { index: true, element: <DashboardPage/> },
-            { path: "books", element: <BooksPage/> },
-            { path: "roadmaps", element: <RoadmapsPage /> },
-            { path: "fields", element: <FieldsPage /> },
-            { path: "contributors", element: <ContributorsPage /> },
-            { path: "settings", element: <SettingsPage /> },
-          ]
-        }
-      ]
-    }
-  ]
-}
+            { index: true, element: <DashboardPage /> },
+            { path: 'books', element: <BooksPage /> },
+            { path: 'roadmaps', element: <RoadmapsPage /> },
+            { path: 'fields', element: <FieldsPage /> },
+            { path: 'contributors', element: <ContributorsPage /> },
+            { path: 'settings', element: <SettingsPage /> },
+          ],
+        },
+      ],
+    },
+  ],
+};

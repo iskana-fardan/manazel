@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import type { Book } from "../../books/books.types";
+import type { Book } from "../../../../types/api";
 import { AddBookDialog } from "./AddBookDialog";
 
 type Props = {

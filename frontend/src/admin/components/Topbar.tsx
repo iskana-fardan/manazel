@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   AppBar,
   Avatar,
+  CircularProgress,
   Divider,
   IconButton,
   ListItemIcon,
@@ -16,9 +17,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useColorMode } from "../../theme/useColorMode";
+import { useLogout } from "../../features/auth/use-auth";
 
 interface TopbarProps {
   drawerWidth: number;
@@ -43,10 +45,18 @@ export default function Topbar({
 }: TopbarProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const theme = useTheme();
   const { toggleColorMode } = useColorMode();
+  const logoutMutation = useLogout();
 
   const pageTitle = getPageTitle(location.pathname);
+
+  const handleLogout = () => {
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => navigate("/admin/login", { replace: true }),
+    });
+  };
 
   return (
     <AppBar
@@ -116,7 +126,10 @@ export default function Topbar({
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           slotProps={{
-            paper: { elevation: 3, sx: { minWidth: 180, mt: 0.5, borderRadius: 2 } },
+            paper: {
+              elevation: 3,
+              sx: { minWidth: 180, mt: 0.5, borderRadius: 2 },
+            },
           }}
         >
           <MenuItem>
@@ -126,9 +139,17 @@ export default function Topbar({
             Profile
           </MenuItem>
           <Divider />
-          <MenuItem sx={{ color: "error.main" }}>
+          <MenuItem
+            onClick={handleLogout}
+            disabled={logoutMutation.isPending}
+            sx={{ color: "error.main" }}
+          >
             <ListItemIcon>
-              <LogoutIcon fontSize="small" color="error" />
+              {logoutMutation.isPending ? (
+                <CircularProgress size={16} color="error" />
+              ) : (
+                <LogoutIcon fontSize="small" color="error" />
+              )}
             </ListItemIcon>
             Logout
           </MenuItem>

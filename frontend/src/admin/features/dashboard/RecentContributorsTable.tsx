@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import PeopleIcon from "@mui/icons-material/People";
 import { Link } from "react-router-dom";
-import { useContributors } from "../../../hooks/useContributors";
+import { useContributors } from "../../../features/contributors/use-contributors";
 
 const HEAD_CELLS = ["Name", "Role", "Description"];
 

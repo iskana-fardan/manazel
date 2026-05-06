@@ -12,9 +12,9 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { bookSchema, type BookFormValues } from "./book.schema";
-import type { Book } from "./books.types";
-import type { Field } from "../fields/fields.types";
+import { bookSchema, type BookFormValues } from "../../../features/books/books.schema";
+import type { Book } from "../../../types/api";
+import type { Field } from "../../../types/api";
 
 import BookFormFields from "./components/BookFormFields";
 import ResourceFields from "./components/ResourceFields";
